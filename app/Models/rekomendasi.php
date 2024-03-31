@@ -9,4 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Rekomendasi extends Model
 {
     use HasFactory, HasUuids;
+
+    protected $table = 'rekomendasi';
+    protected $primaryKey = 'rekomendasi_id';
+    public $timestamps = false;
 }

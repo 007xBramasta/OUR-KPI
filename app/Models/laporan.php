@@ -9,4 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Laporan extends Model
 {
     use HasFactory, HasUuids;
+
+    protected $table = 'laporan';
+    protected $primaryKey = 'laporan_id';
+    public $timestamps = true;
 }
