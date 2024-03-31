@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('departements', function (Blueprint $table) {
-            $table->foreignUuid('rekomendasi_id')->references('rekomendasi_id')->on('rekomendasi');
+            $table->foreignUuid('rekomendasi_id')->nullable(true)->references('rekomendasi_id')->on('rekomendasi');
         });
     }
 
