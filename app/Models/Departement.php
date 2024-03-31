@@ -9,4 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Departement extends Model
 {
     use HasFactory, HasUuids;
+    protected $table = 'departements';
+    protected $primaryKey = 'departements_id';
+
 }
