@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('laporan', function (Blueprint $table) {
             $table->uuid('laporan_id')->primary();
-            $table->foreign('penilaian_id')->references('penilaian_id')->on('penilaian');
-            $table->foreign('user_id')->references('user_id')->on('user');
-            $table->foreign('departements_id')->references('departements_id')->on('departements');
+            $table->foreignUuid('penilaian_id')->references('penilaian_id')->on('penilaian');
+            $table->foreignUuid('user_id')->references('user_id')->on('user');
+            $table->foreignUuid('departements_id')->references('departements_id')->on('departements');
         });
     }
 

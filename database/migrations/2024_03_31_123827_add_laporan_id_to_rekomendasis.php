@@ -13,14 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user', function (Blueprint $table) {
-            $table->uuid('user_id')->primary();
-            $table->string('user_name');
-            $table->string('user_email')->uniqid();
-            $table->string('users_password');
-            $table->enum('role', ['admin', 'karyawan'])->default('karyawan');
-            $table->timestamps();
-
+        Schema::table('rekomendasi', function (Blueprint $table) {
+            $table->foreignUuid('laporan_id')->references('laporan_id')->on('laporan');
         });
     }
 
@@ -31,6 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user');
+        Schema::table('rekomendasi', function (Blueprint $table) {
+            $table->dropForeign('rekomendasi_laporan_id_foreign');
+            $table->dropColumn('laporan_id');
+        });
     }
 };

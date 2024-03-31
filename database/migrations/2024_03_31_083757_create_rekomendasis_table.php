@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('rekomendasi', function (Blueprint $table) {
             $table->uuid('rekomendasi_id')->primary();
             $table->string('rekomendasi_name');
-            $table->foreign('laporan_id')->references('laporan_id')->on('laporan');
         });
     }
 
