@@ -32,4 +32,9 @@ class UserTest extends TestCase
 
         self::assertInstanceOf(Departement::class, $user->departement);
     }
+
+    public function test_user_laporan_relation(){
+        
+
+    }
 }
