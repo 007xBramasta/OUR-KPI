@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Laporan extends Model
 {
@@ -22,5 +23,15 @@ class Laporan extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class,'user_id', 'id');
+    }
+
+    public function rekomendasi(): HasMany
+    {
+        return $this->hasMany(Rekomendasi::class, 'laporan_id' , 'laporan_id' );
+    }
+
+    public function penilaian(): HasMany
+    {
+        return $this->hasMany(Penilaian::class, 'laporan_id');
     }
 }

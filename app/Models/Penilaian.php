@@ -12,5 +12,8 @@ class Penilaian extends Model
 
     protected $table = 'penilaian';
     protected $primaryKey = 'penilaian_id';
+    protected $guarded = [
+        'penilaian_id'
+    ];
     public $timestamps = false;
 }
