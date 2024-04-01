@@ -38,11 +38,9 @@ class DepartemenTest extends TestCase
         }
     }
 
-    public function test_departement_rekomendasi_relation(){
+    public function test_departement_laporans_relation(){
         $klausul = Klausul::factory()->create();
-        $penilaian = Penilaian::factory()->create([
-            'klausul_id' => $klausul->klausul_id
-        ]);
+        
 
         $departement = Departement::factory()->create([
             "departements_name" => "IT",
@@ -53,17 +51,25 @@ class DepartemenTest extends TestCase
         ]);
 
         $laporan = Laporan::create([
-            "penilaian_id" => $penilaian->penilaian_id,
             "user_id" => $user->id,
             "departements_id" => $departement->departements_id
         ]);
 
+        $penilaian = Penilaian::factory()->create([
+            'klausul_id' => $klausul->klausul_id,
+            'laporan_id' => $laporan->laporan_id
+        ]);
         $rekomendasi = Rekomendasi::factory()->create([
             "departements_id" => $departement->departements_id,
             "laporan_id" => $laporan->laporan_id
         ]);
 
-        dd($departement->rekomendasi());
+
+        self::assertInstanceOf(Collection::class, $departement->laporans);
+
+        foreach($departement->laporans as $laporan){
+            self::assertInstanceOf(Laporan::class, $laporan);
+        }
 
     }
 
