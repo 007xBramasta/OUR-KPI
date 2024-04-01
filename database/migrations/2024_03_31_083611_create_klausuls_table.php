@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('klausul', function (Blueprint $table) {
             $table->uuid('klausul_id')->primary();
             $table->string('klausul_name');
+            $table->json('item');
         });
     }
 

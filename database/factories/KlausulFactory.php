@@ -17,7 +17,10 @@ class KlausulFactory extends Factory
     public function definition()
     {
         return [
-            'klausul_name' => fake()->sentence()
+            'klausul_name' => fake()->sentence(),
+            'item' => json_encode([
+                'Terdapat kebijakan K3',
+            ])
         ];
     }
 }
