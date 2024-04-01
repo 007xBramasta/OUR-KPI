@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->uniqid();
             $table->string('password');
             $table->enum('role', ['admin', 'karyawan'])->default('karyawan');
-            $table->timestamps();
+            $table->timestamps()->nullable();
 
         });
     }
