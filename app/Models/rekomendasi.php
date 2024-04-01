@@ -13,4 +13,8 @@ class Rekomendasi extends Model
     protected $table = 'rekomendasi';
     protected $primaryKey = 'rekomendasi_id';
     public $timestamps = false;
+
+    protected $guarded = [
+        'rekomendasi_id'
+    ];
 }
