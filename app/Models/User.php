@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -68,5 +69,10 @@ class User extends Authenticatable implements JWTSubject
     public function departement(): BelongsTo
     {
         return $this->belongsTo(Departement::class, 'departements_id', 'departements_id');
+    }
+
+    public function laporan(): HasMany
+    {
+        return $this->hasMany(Laporan::class, 'user_id', 'id');
     }
 }
