@@ -13,4 +13,9 @@ class Klausul extends Model
     protected $table = 'klausul';
     protected $primaryKey = 'klausul_id';
     public $timestamps = false;
+
+
+    protected $casts = [
+        'item' => 'array'
+    ];
 }

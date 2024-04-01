@@ -67,7 +67,11 @@ class KlausulSeeder extends Seeder
                     'Kesesuaian kompetensi teknisi',
                     'Sertifikat sarana dan peralatan produksi',
                     'Fasilitas keadaan darurat',
-                    'Pemeriksaan alat tanggap darurat : Inspeksi APAR, Inspeksi Hydrant, Inspeksi Fire Alarm System',
+                    'Pemeriksaan alat tanggap darurat' => [
+                        'Inspeksi APAR', 
+                        'Inspeksi Hydrant', 
+                        'Inspeksi Fire Alarm System'
+                    ],
                     'Pelatihan keadaan tanggap darurat',
                     'Prosedur keadaan tanggap darurat',
                     'Tersedia fasilitas P3K',
@@ -81,7 +85,13 @@ class KlausulSeeder extends Seeder
                     'Inspeksi K3',
                     'Laporan inspeksi K3',
                     'Laporan tindakan perbaikan',
-                    'Pengukuran lingkungan kerja : Faktor Fisika, Faktor Kimia, Faktor Biologi, Faktor Ergonomi, Faktor Psikologi',
+                    'Pengukuran lingkungan kerja' => [
+                        'Faktor Fisika', 
+                        'Faktor Kimia', 
+                        'Faktor Biologi', 
+                        'Faktor Ergonomi', 
+                        'Faktor Psikologi',
+                    ],   
                     'Medical check up',
                     'Program pelayanan kesehatan'
                 ])

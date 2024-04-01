@@ -60,7 +60,6 @@ class DepartemenTest extends TestCase
             'laporan_id' => $laporan->laporan_id
         ]);
         $rekomendasi = Rekomendasi::factory()->create([
-            "departements_id" => $departement->departements_id,
             "laporan_id" => $laporan->laporan_id
         ]);
 

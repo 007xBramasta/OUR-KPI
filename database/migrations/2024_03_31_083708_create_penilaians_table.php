@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('penilaian_target');
             $table->string('penilaian_aktual');
             $table->string('penilaian_keterangan');
+            $table->string('rekomendasi')->nullable();
+            $table->boolean('disetujui')->default(false);
             $table->foreignUuid('klausul_id')->references('klausul_id')->on('klausul');
         });
     }
