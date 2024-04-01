@@ -34,4 +34,9 @@ class Laporan extends Model
     {
         return $this->hasMany(Penilaian::class, 'laporan_id');
     }
+
+    public function department()
+    {
+        return $this->user->belongsTo(Departement::class,'departements_id','departements_id' );
+    }
 }
