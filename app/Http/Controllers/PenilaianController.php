@@ -15,12 +15,15 @@ class PenilaianController extends Controller
     public function get_penilaian(Request $request)
     {
 
-        $disetujui = $request->query('setuju') ?? '1';
-        // user masih sementara
+        $disetujui = $request->query('setuju');
         $laporan = Laporan::where('user_id', auth()->user()->id)->firstOrFail();
-        $data = $laporan->penilaian()->where('disetujui', '=', $disetujui)
-            ->with('klausul')
-            ->get();
+        $query = $laporan->penilaian()->with('klausul');
+
+        if ($disetujui !== null) {
+            $query->where('disetujui', '=', $disetujui);
+        }
+        $data = $query->get();
+
         $transformedData = [];
         foreach ($data as $penilaian) {
             $transformedData[] = [
