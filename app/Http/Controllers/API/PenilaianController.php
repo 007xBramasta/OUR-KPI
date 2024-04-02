@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Laporan;
 use App\Models\Penilaian;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PenilaianController extends Controller
 {
     public function index()
     {
-        $data = Penilaian::where('disetujui' , '=', '1')
+        // user masih sementara
+        $laporan = Laporan::where('user_id', User::first()->id)->firstOrFail();
+        $data = $laporan->penilaian()->where('disetujui' , '=', '1')
             ->with('klausul')
             ->get();
         $transformedData = [];
@@ -23,7 +27,10 @@ class PenilaianController extends Controller
             ];
         }
         return response()->json([
-            'data' => $transformedData
+            'data' => [
+                "laporan" => $laporan,
+                "penilaians" =>$transformedData
+            ]
         ]);
     }
 }

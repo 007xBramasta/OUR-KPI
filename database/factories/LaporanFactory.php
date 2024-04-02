@@ -17,7 +17,8 @@ class LaporanFactory extends Factory
     public function definition()
     {
         return [
-            'laporan'
+            'user_id' => \App\Models\User::factory(),
+            'departements_id' => \App\Models\Departement::factory()
         ];
     }
 }

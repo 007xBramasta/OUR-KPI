@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\PenilaianController;
+use App\Models\Rekomendasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,5 @@ Route::middleware('api')->prefix('auth')->group(function () {
 
 Route::middleware('guest')->group(function(){
     Route::get('/penilaian', [PenilaianController::class , 'index']);
+    Route::get('/rekomendasi', [RekomendasiController::class , 'index']);
 });

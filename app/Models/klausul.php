@@ -16,6 +16,6 @@ class Klausul extends Model
 
 
     protected $casts = [
-        'item' => 'array'
+        'item' => 'array',
     ];
 }
