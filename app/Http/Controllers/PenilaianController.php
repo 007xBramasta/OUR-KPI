@@ -11,12 +11,7 @@ use Illuminate\Http\Request;
 
 class PenilaianController extends Controller
 {
-    public function klausul()
-    {
-        return response()->json(Klausul::all());
 
-
-    }
     public function index()
     {
         // user masih sementara

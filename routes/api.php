@@ -24,3 +24,4 @@ Route::middleware('auth.jwt')->group(function () {
     Route::get('/rekomendasi', [RekomendasiController::class , 'index']);
     // Definisikan rute lainnya yang memerlukan autentikasi di sini
 });
+Route::get('klausul', [PenilaianController::class , 'klausul']);
