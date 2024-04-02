@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Penilaian;
@@ -19,7 +19,7 @@ class PenilaianController extends Controller
                 'klausul' => $penilaian->klausul,
                 'target' => $penilaian->penilaian_target,
                 'aktual' => $penilaian->penilaian_aktual,
-                'keterangan' => $penilaian->keterangan,
+                'keterangan' => $penilaian->penilaian_keterangan,
             ];
         }
         return response()->json([
