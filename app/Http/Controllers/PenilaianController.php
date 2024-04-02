@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class PenilaianController extends Controller
 {
 
-    public function index()
+    public function get_penilaian()
     {
         // user masih sementara
         $laporan = Laporan::where('user_id', auth()->user()->id)->firstOrFail();
@@ -28,6 +28,7 @@ class PenilaianController extends Controller
                 'keterangan' => $penilaian->penilaian_keterangan,
             ];
         }
+
         return response()->json([
             'data' => [
                 "laporan" => $laporan,
