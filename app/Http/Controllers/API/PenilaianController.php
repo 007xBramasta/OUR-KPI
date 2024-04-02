@@ -10,7 +10,9 @@ class PenilaianController extends Controller
 {
     public function index()
     {
-        $data = Penilaian::with('klausul')->get();
+        $data = Penilaian::where('disetujui' , '=', '1')
+            ->with('klausul')
+            ->get();
         $transformedData = [];
         foreach ($data as $penilaian) {
             $transformedData[] = [
