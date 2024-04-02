@@ -31,7 +31,6 @@ class PenilaianSeeder extends Seeder
             [
                 'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
-                'penilaian_indikator' => 'Hello World',
                 'penilaian_target' => 1,
                 'penilaian_aktual' => 1,
                 'penilaian_keterangan' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint saepe ex soluta, quisquam eos reprehenderit eveniet esse obcaecati amet cumque, debitis ut provident illo libero expedita explicabo. A, eos! A.',
@@ -42,7 +41,6 @@ class PenilaianSeeder extends Seeder
             [
                 'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
-                'penilaian_indikator' => 'Hello World',
                 'penilaian_target' => 1,
                 'penilaian_aktual' => 1,
                 'penilaian_keterangan' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint saepe ex soluta, quisquam eos reprehenderit eveniet esse obcaecati amet cumque, debitis ut provident illo libero expedita explicabo. A, eos! A.',
@@ -52,7 +50,6 @@ class PenilaianSeeder extends Seeder
             [
             'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
-                'penilaian_indikator' => 'Lorem Ipsum',
                 'penilaian_target' => 1,
                 'penilaian_aktual' => 1,
                 'penilaian_keterangan' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint saepe ex soluta, quisquam eos reprehenderit eveniet esse obcaecati amet cumque, debitis ut provident illo libero expedita explicabo. A, eos! A.',
@@ -62,7 +59,6 @@ class PenilaianSeeder extends Seeder
             [
             'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
-                'penilaian_indikator' => 'Lorem Ipsum',
                 'penilaian_target' => 1,
                 'penilaian_aktual' => 1,
                 'penilaian_keterangan' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint saepe ex soluta, quisquam eos reprehenderit eveniet esse obcaecati amet cumque, debitis ut provident illo libero expedita explicabo. A, eos! A.',
@@ -73,7 +69,6 @@ class PenilaianSeeder extends Seeder
             [
                 'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
-                'penilaian_indikator' => 'Lorem Ipsum',
                 'penilaian_target' => 1,
                 'penilaian_aktual' => 1,
                 'penilaian_keterangan' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint saepe ex soluta, quisquam eos reprehenderit eveniet esse obcaecati amet cumque, debitis ut provident illo libero expedita explicabo. A, eos! A.',
@@ -83,7 +78,6 @@ class PenilaianSeeder extends Seeder
             [
                 'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
-                'penilaian_indikator' => 'Lorem Ipsum',
                 'penilaian_target' => 1,
                 'penilaian_aktual' => 1,
                 'penilaian_keterangan' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint saepe ex soluta, quisquam eos reprehenderit eveniet esse obcaecati amet cumque, debitis ut provident illo libero expedita explicabo. A, eos! A.',
