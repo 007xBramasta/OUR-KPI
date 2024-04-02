@@ -12,11 +12,13 @@ use Illuminate\Http\Request;
 class PenilaianController extends Controller
 {
 
-    public function get_penilaian()
+    public function get_penilaian(Request $request)
     {
+
+        $disetujui = $request->query('setuju') ?? '1';
         // user masih sementara
         $laporan = Laporan::where('user_id', auth()->user()->id)->firstOrFail();
-        $data = $laporan->penilaian()->where('disetujui', '=', '1')
+        $data = $laporan->penilaian()->where('disetujui', '=', $disetujui)
             ->with('klausul')
             ->get();
         $transformedData = [];
