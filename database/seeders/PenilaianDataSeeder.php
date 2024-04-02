@@ -10,7 +10,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 
-class PenilaianSeeder extends Seeder
+class PenilaianDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -37,7 +37,7 @@ class PenilaianSeeder extends Seeder
                 'disetujui' => 1,
                 'klausul_id' => Klausul::skip(5)->first()->klausul_id
             ],
-            
+
             [
                 'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
@@ -48,7 +48,7 @@ class PenilaianSeeder extends Seeder
                 'klausul_id' => Klausul::skip(4)->first()->klausul_id
             ],
             [
-            'penilaian_id' => \Str::uuid(),
+                'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
                 'penilaian_target' => 1,
                 'penilaian_aktual' => 1,
@@ -57,7 +57,7 @@ class PenilaianSeeder extends Seeder
                 'klausul_id' => Klausul::skip(3)->first()->klausul_id
             ],
             [
-            'penilaian_id' => \Str::uuid(),
+                'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
                 'penilaian_target' => 1,
                 'penilaian_aktual' => 1,
@@ -65,7 +65,7 @@ class PenilaianSeeder extends Seeder
                 'disetujui' => 1,
                 'klausul_id' => Klausul::skip(2)->first()->klausul_id
             ],
-            
+
             [
                 'penilaian_id' => \Str::uuid(),
                 'laporan_id' => $laporan->laporan_id,
