@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('penilaian', function (Blueprint $table) {
             $table->uuid('penilaian_id')->primary();
-            $table->integer('penilaian_target');
-            $table->string('penilaian_aktual');
-            $table->string('penilaian_keterangan');
+            $table->integer('penilaian_target')->default(1);
+            $table->string('penilaian_aktual')->nullable();
+            $table->string('penilaian_keterangan')->nullable();
             $table->string('rekomendasi')->nullable();
             $table->boolean('disetujui')->default(false);
             $table->foreignUuid('klausul_id')->references('klausul_id')->on('klausul');

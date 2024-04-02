@@ -20,12 +20,7 @@ class Departement extends Model
     {
         return $this->hasMany(User::class, 'departements_id', 'id');
     }
-
-    // public function laporan(): HasOne
-    // {
-    //     return $this->hasOne(Laporan::class, 'departements_id', 'laporan_id');
-    // }
-
+    
     public function rekomendasi(): HasManyThrough
     {
         return $this->hasManyThrough(Rekomendasi::class, Laporan::class, 'departements_id', 'laporan_id', 'rekomendasi_id');

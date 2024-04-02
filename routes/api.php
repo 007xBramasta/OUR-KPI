@@ -22,6 +22,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth.jwt')->group(function () {
     Route::get('/penilaians', [PenilaianController::class, 'get_penilaian']);
     Route::get('/rekomendasi', [RekomendasiController::class, 'index']);
+    Route::post('/laporan', [LaporanController::class, 'createLaporan']);
     // Definisikan rute lainnya yang memerlukan autentikasi di sini
 });
 Route::get('klausul', [PenilaianController::class, 'klausul']);
