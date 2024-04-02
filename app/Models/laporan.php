@@ -17,17 +17,22 @@ class Laporan extends Model
     protected $guarded = [
         'laporan_id'
     ];
-    
+
     public $timestamps = true;
+
+    protected $casts = [
+        'created_at' => 'datetime:U',
+        'updated_at' => 'datetime:U',
+    ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function rekomendasi(): HasMany
     {
-        return $this->hasMany(Rekomendasi::class, 'laporan_id' , 'laporan_id' );
+        return $this->hasMany(Rekomendasi::class, 'laporan_id', 'laporan_id');
     }
 
     public function penilaian(): HasMany
@@ -37,6 +42,6 @@ class Laporan extends Model
 
     public function department()
     {
-        return $this->user->belongsTo(Departement::class,'departements_id','departements_id' );
+        return $this->user->belongsTo(Departement::class, 'departements_id', 'departements_id');
     }
 }
