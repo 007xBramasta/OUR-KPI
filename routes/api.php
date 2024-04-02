@@ -1,7 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PenilaianController;
+
+// Rute untuk autentikasi
+Route::prefix('auth')->group(function () {   
 use App\Http\Controllers\PenilaianController;
 
 // Rute untuk autentikasi
