@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('klausul_items', function (Blueprint $table) {
-            $table->foreignUuid('klausul_id')->after('id')->references('klausul_id')->on('klausul');
+            $table->foreignUuid('klausul_id')->after('id')->references('id')->on('klausuls');
         });
     }
 

@@ -15,6 +15,8 @@ class Penilaian extends Model
         'id'
     ];
 
+    public $timestamps = false;
+
     public function klausul_item(): BelongsTo
     {
         return $this->belongsTo(KlausulItem::class, 'klausul_item_id', 'id');

@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('klausul', function (Blueprint $table) {
-            $table->uuid('klausul_id')->primary();
-            $table->string('klausul_name');
+        Schema::create('klausuls', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name');
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('klausul');
+        Schema::dropIfExists('klausuls');
     }
 };
