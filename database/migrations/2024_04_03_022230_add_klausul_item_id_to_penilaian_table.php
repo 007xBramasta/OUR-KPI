@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('penilaians', function (Blueprint $table) {
-            $table->foreignUuid('laporan_id')->references('laporan_id')->on('laporan');
+            $table->foreignUuid('klausul_item_id')->after('id')->references('id')->on('klausul_items');
         });
     }
 
@@ -26,8 +26,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('penilaians', function (Blueprint $table) {
-            $table->dropForeign('penilaians_laporan_id_foreign');
-            $table->dropColumn('laporan_id');
+            $table->dropForeign('penilaians_klausul_item_id_foreign');
+            $table->dropColumn('klausul_item_id');
         });
     }
 };

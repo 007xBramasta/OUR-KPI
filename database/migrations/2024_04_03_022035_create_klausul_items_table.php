@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('penilaians', function (Blueprint $table) {
+        Schema::create('klausul_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('target')->default(1);
-            $table->string('aktual')->nullable();
-            $table->string('keterangan')->nullable();
-            $table->string('rekomendasi')->nullable();
-            $table->boolean('disetujui')->default(false);
+            $table->string('title');
+            $table->timestamps();
         });
     }
 
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('penilaian');
+        Schema::dropIfExists('klausul_items');
     }
 };
