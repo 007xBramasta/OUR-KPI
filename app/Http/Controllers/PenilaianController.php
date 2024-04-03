@@ -42,6 +42,30 @@ class PenilaianController extends Controller
         ]);
     }
 
+    public function update_penilaian(string $penilaianId, string $klausulId, Request $request)
+    {
+        $laporan = Laporan::where('user_id', '=', auth()->user()->id)->first();
+        $penilaian = Penilaian::where('penilaian_id', '=', $penilaianId)
+            ->where('klausul_id', '=', $klausulId)
+            ->where('klausul_id', '=', $klausulId)
+            ->where('laporan_id', '=', $laporan->laporan_id)
+            ->firstOrFail();
+
+        if ($request->has('penilaian_aktual')) {
+            $penilaian->penilaian_aktual = $request->penilaian_aktual;
+        }
+
+        if ($request->has('penilaian_keterangan')) {
+            $penilaian->penilaian_keterangan = $request->penilaian_penilaian_keterangan;
+        }
+
+        $penilaian->save();
+
+        return response()->json([
+            'message' => 'Penilaian berhasil diperbaharui.'
+        ]);
+    }
+
     public function get_rekomendasi()
     {
         $laporan = Laporan::where('user_id', auth()->user()->id)->firstOrFail();

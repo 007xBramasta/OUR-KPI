@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Laporan extends Model
 {
@@ -35,13 +36,13 @@ class Laporan extends Model
         return $this->hasMany(Rekomendasi::class, 'laporan_id', 'laporan_id');
     }
 
-    public function penilaian(): HasMany
+    public function penilaians():HasMany
     {
-        return $this->hasMany(Penilaian::class, 'laporan_id');
+        return $this->hasMany(Penilaian::class, 'laporan_id', 'id');
     }
 
-    public function department()
+    public function klausul_items(): HasManyThrough
     {
-        return $this->user->belongsTo(Departement::class, 'departements_id', 'departements_id');
+        return $this->hasManyThrough(KlausulItem::class, Penilaian::class, 'klausul_item_id', 'id', 'laporan_id');
     }
 }
