@@ -20,7 +20,8 @@ Route::prefix('auth')->group(function () {
 
 // Rute untuk penilaian memerlukan autentikasi
 Route::middleware('auth.jwt')->group(function () {
-    Route::get('/penilaians', [PenilaianController::class, 'get_penilaian']);
+    Route::get('/penilaians/{laporanId}', [PenilaianController::class, 'get_penilaian']);
+    Route::patch('/penilaians/{penilaianId}/klausuls/{klausulId}', [PenilaianController::class, 'update_penilaian']);
     Route::get('/rekomendasi', [RekomendasiController::class, 'index']);
     Route::post('/laporan', [LaporanController::class, 'createLaporan']);
     // Definisikan rute lainnya yang memerlukan autentikasi di sini
