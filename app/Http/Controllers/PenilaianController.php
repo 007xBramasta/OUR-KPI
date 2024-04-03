@@ -16,29 +16,19 @@ class PenilaianController extends Controller
     {
 
         $disetujui = $request->query('setuju');
-        $laporan = Laporan::where('user_id', auth()->user()->id)->firstOrFail();
-        $query = $laporan->penilaian()->with('klausul');
-
-        if ($disetujui !== null) {
-            $query->where('disetujui', '=', $disetujui);
-        }
-        $data = $query->get();
-
-        $transformedData = [];
-        foreach ($data as $penilaian) {
-            $transformedData[] = [
-                'klausul' => $penilaian->klausul,
-                'target' => $penilaian->penilaian_target,
-                'aktual' => $penilaian->penilaian_aktual,
-                'keterangan' => $penilaian->penilaian_keterangan,
+        $penilaians = Penilaian::where('laporan_id', '=', auth()->user()->laporan->id)->with('klausul.klausul_items.penilaians')->get();
+        $transformedData = $penilaians->groupBy(function ($item) {
+            return $item->klausul->name;
+        })->map(function ($group) {
+            return [
+                'klausul_id' => $group->first()->klausul->id,
+                'klausul_name' => $group->first()->klausul->name,
+                'klausul_items' => mapItems($group->first()->klausul->klausul_items)
             ];
-        }
+        })->values();
 
         return response()->json([
-            'data' => [
-                "laporan" => $laporan,
-                "penilaians" => $transformedData
-            ]
+            'data' => $transformedData
         ]);
     }
 
