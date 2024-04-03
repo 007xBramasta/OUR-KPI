@@ -12,11 +12,11 @@ use Illuminate\Http\Request;
 class PenilaianController extends Controller
 {
 
-    public function get_penilaian(Request $request)
+    public function get_penilaian($laporanId, Request $request)
     {
 
         $disetujui = $request->query('setuju');
-        $penilaians = Penilaian::where('laporan_id', '=', auth()->user()->laporan->id)->with('klausul.klausul_items.penilaians')->get();
+        $penilaians = Penilaian::where('laporan_id', '=', $laporanId)->with('klausul.klausul_items.penilaians')->get();
         $transformedData = $penilaians->groupBy(function ($item) {
             return $item->klausul->name;
         })->map(function ($group) {
