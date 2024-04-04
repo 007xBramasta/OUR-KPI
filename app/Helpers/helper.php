@@ -8,6 +8,7 @@ function mapItems($klausulItems , ...$includes)
                 'id' => $klausulItem->id,
                 'title' => $klausulItem->title,
                 'nilai' => [
+                    'penilaian_id' => $klausulItem->penilaians->first()->id,
                     'target' => $klausulItem->penilaians->first()->target,
                     'aktual' => $klausulItem->penilaians->first()->aktual,
                     'keterangan' => $klausulItem->penilaians->first()->keterangan,
@@ -35,6 +36,7 @@ function getChildren($parent, $klausulItems, $attributes)
                 'id' => $klausulItem->id,
                 'title' => $klausulItem->title,
                 'nilai' => [
+                    'penilaian_id' => $klausulItem->penilaians->first()->id,
                     'target'  => $klausulItem->penilaians->first()->target,
                     'aktual'  => $klausulItem->penilaians->first()->aktual,
                     'keterangan' => $klausulItem->penilaians->first()->keterangan,
