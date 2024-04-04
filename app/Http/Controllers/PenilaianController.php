@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Klausul;
 use App\Models\Laporan;
 use App\Models\Penilaian;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class PenilaianController extends Controller
@@ -14,7 +12,32 @@ class PenilaianController extends Controller
 
     public function get_penilaian(Request $request)
     {
-        $disetujui = $request->query('setuju');
+        $laporanId = auth()->user()->laporan->first()->laporan_id;
+        $data = \App\Models\Klausul::with('klausul_items.penilaians')
+            ->whereHas('klausul_items.penilaians', function ($query) use ($laporanId) {
+                $query->where('laporan_id', $laporanId);
+            })
+            ->get();
+
+        $transformedData = $data->map(function ($klausul) {
+            return [
+                'klausul_id' => $klausul->id,
+                'klausul_name' => $klausul->name,
+                'klausul_items' => mapItems($klausul->klausul_items)
+            ];
+        })->values();
+
+        return response()->json([
+            'message' => 'Data penilaian berhasil diperoleh.',
+            'data' => [
+                'laporan' => Laporan::where('laporan_id', $laporanId)->first(),
+                'penilaians' => $transformedData
+            ]
+        ]);
+    }
+
+    public function edit_penilaian()
+    {
         $laporanId = auth()->user()->laporan->first()->laporan_id;
         $penilaians = Penilaian::where('laporan_id', '=', $laporanId)->with('klausul.klausul_items.penilaians')->get();
         $transformedData = $penilaians->groupBy(function ($item) {
@@ -34,13 +57,13 @@ class PenilaianController extends Controller
 
     public function update_penilaian(string $penilaianId, string $klausulId, Request $request)
     {
-        $laporan = Laporan::where('user_id', '=', auth()->user()->id)->first();
+
         $penilaian = Penilaian::where('penilaian_id', '=', $penilaianId)
             ->where('klausul_id', '=', $klausulId)
-            ->where('klausul_id', '=', $klausulId)
-            ->where('laporan_id', '=', $laporan->laporan_id)
             ->firstOrFail();
 
+        if ($penilaian->laporan_id != auth()->user()) {
+        }
         if ($request->has('penilaian_aktual')) {
             $penilaian->penilaian_aktual = $request->penilaian_aktual;
         }

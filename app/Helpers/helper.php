@@ -11,6 +11,7 @@ function mapItems($klausulItems , ...$includes)
                     'target' => $klausulItem->penilaians->first()->target,
                     'aktual' => $klausulItem->penilaians->first()->aktual,
                     'keterangan' => $klausulItem->penilaians->first()->keterangan,
+                    'disetujui' => (bool) $klausulItem->penilaians->first()->disetujui
                 ],
             ];
             if(in_array('rekomendasi', $includes)){
@@ -18,9 +19,7 @@ function mapItems($klausulItems , ...$includes)
             }
             
             $children = getChildren($klausulItem, $klausulItems, $includes);
-            if (!empty($children)) {
-                $item['children'] = $children;
-            }
+            $item['children'] = $children;
             $items[] = $item;
         }
     }
@@ -39,6 +38,7 @@ function getChildren($parent, $klausulItems, $attributes)
                     'target'  => $klausulItem->penilaians->first()->target,
                     'aktual'  => $klausulItem->penilaians->first()->aktual,
                     'keterangan' => $klausulItem->penilaians->first()->keterangan,
+                    'disetujui' => (bool) $klausulItem->penilaians->first()->disetujui
                 ]
             ];
 
