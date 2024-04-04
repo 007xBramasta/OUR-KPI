@@ -57,10 +57,15 @@ class PenilaianController extends Controller
 
     public function update_penilaian(string $penilaianId, string $klausulItemId, Request $request)
     {
-
         $penilaian = Penilaian::where('id', '=', $penilaianId)
-            ->where('klausul_item_id', '=', $klausulItemId)
-            ->firstOrFail();
+        ->where('klausul_item_id', '=', $klausulItemId)
+        ->firstOrFail();
+        
+        if ($request->user()->cannot('update', $penilaian)) {
+            return response([
+                'error' => 'Anda tidak memiliki akses.'
+            ],403);
+        }
 
         if ($penilaian->laporan_id != auth()->user()) {
         }

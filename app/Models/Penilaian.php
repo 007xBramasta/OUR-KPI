@@ -24,7 +24,7 @@ class Penilaian extends Model
 
     public function laporan(): BelongsTo
     {
-        return $this->belongsTo(Laporan::class, 'laporan_id', 'id');
+        return $this->belongsTo(Laporan::class, 'laporan_id', 'laporan_id');
     }
 
     public function klausul()
