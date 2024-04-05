@@ -22,11 +22,11 @@ Route::prefix('auth')->group(function () {
 
 // Rute untuk penilaian memerlukan autentikasi
 Route::middleware('auth.jwt')->group(function () {
-    Route::get('/penilaians', [PenilaianController::class, 'get_penilaian']);
+    Route::get('/penilaians/{laporanId}', [PenilaianController::class, 'get_penilaian']);
     Route::patch('/penilaians/{penilaianId}/klausuls/{klausulId}', [PenilaianController::class, 'update_penilaian']);
-    Route::get('/rekomendasi', [PenilaianController::class, 'index']);
     Route::get('/laporan', [LaporanController::class, 'showMonthlyReport']);
     // Definisikan rute lainnya yang memerlukan autentikasi di sini
 });
+Route::get('/departements', [DepartementController::class, 'get_departement']);
 Route::get('klausul', [PenilaianController::class, 'klausul']);
 Route::get('/departements', [DepartementController::class, 'get_departement']);
