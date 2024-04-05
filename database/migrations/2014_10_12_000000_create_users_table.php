@@ -20,11 +20,10 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['admin', 'karyawan'])->default('karyawan');
             $table->timestamps();
-
         });
     }
 
-    /**
+    /** 
      * Reverse the migrations.
      *
      * @return void

@@ -24,9 +24,9 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth.jwt')->group(function () {
     Route::get('/penilaians/{laporanId}', [PenilaianController::class, 'get_penilaian']);
     Route::patch('/penilaians/{penilaianId}/klausuls/{klausulId}', [PenilaianController::class, 'update_penilaian']);
-    Route::get('/rekomendasi', [RekomendasiController::class, 'index']);
     Route::get('/laporan', [LaporanController::class, 'showMonthlyReport']);
     // Definisikan rute lainnya yang memerlukan autentikasi di sini
 });
 Route::get('/departements', [DepartementController::class, 'get_departement']);
 Route::get('klausul', [PenilaianController::class, 'klausul']);
+Route::get('/departements', [DepartementController::class, 'get_departement']);

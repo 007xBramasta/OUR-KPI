@@ -17,9 +17,12 @@ class DatabaseSeeder extends Seeder
        $this->call([
             KlausulSeeder::class,
             DepartementsSeeder::class,
+            AdminSeeder::class,
             UserSeeder::class,
             LaporanSeeder::class,
+            KlausulItemIdSeeder::class,
+            KlausulItemSeeder::class,
             PenilaianDataSeeder::class,
-       ]);
+        ]);
     }
 }
