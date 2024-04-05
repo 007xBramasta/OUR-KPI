@@ -1,30 +1,26 @@
 <?php
-
 namespace App\Http\Services;
+
 use Illuminate\Support\Facades\DB;
+use App\Models\Laporan;
 
 class LaporanService
 {
-    public function getMonthlyReport($month)
+    public function getMonthlyReport($month, $year = null)
     {
+        $laporanQuery = Laporan::query();
+
+        if (!is_null($year)) {
+            $laporanQuery->whereYear('created_at', $year);
+        }
+
         if (strlen($month) === 1) {
-            return DB::table('laporan')
-                ->whereRaw("SUBSTRING(created_at, 6, 2) = ?", [$month])
-                ->get();
-        }
-
-        if (strlen($month) > 1) {
-            // Mendapatkan array bulan dari input yang diberikan
+            $laporanQuery->whereMonth('created_at', $month);
+        } elseif (strlen($month) > 1) {
             $months = explode(',', $month);
-
-            // Menggunakan OR untuk mencari laporan dengan bulan yang sesuai dengan array bulan yang diberikan
-            return DB::table('laporan')
-                ->where(function ($query) use ($months) {
-                    foreach ($months as $month) {
-                        $query->orWhereRaw("SUBSTRING(created_at, 6, 2) = ?", [$month]);
-                    }
-                })
-                ->get();
+            $laporanQuery->whereIn(DB::raw('MONTH(created_at)'), $months);
         }
+
+        return $laporanQuery->get();
     }
 }
