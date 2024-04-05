@@ -10,9 +10,10 @@ use Illuminate\Http\Request;
 class PenilaianController extends Controller
 {
 
-    public function get_penilaian(Request $request)
+    public function get_penilaian(string $laporanId, Request $request)
     {
-        $laporanId = auth()->user()->laporan->first()->laporan_id;
+        $laporan = Laporan::where('laporan_id', '=', $laporanId)->firstOrFail();
+
         $data = \App\Models\Klausul::with('klausul_items.penilaians')
             ->whereHas('klausul_items.penilaians', function ($query) use ($laporanId) {
                 $query->where('laporan_id', $laporanId);
