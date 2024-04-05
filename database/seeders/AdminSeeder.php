@@ -19,10 +19,10 @@ class AdminSeeder extends Seeder
     {
         $departements = Departement::all();
 
-        foreach($departements as $departement){
+        foreach($departements as $index => $departement){
             User::create([
                 "name" => "Admin Departement $departement->departements_name",
-                'email' => 'admin@mail.com',
+                'email' => 'admin'. $index. '@mail.com',
                 'password' => Hash::make('password'),
                 'role' => 'admin',
                 'departements_id' => $departement->departements_id
