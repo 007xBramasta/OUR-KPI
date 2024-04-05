@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\CreateMonthlyReport;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,6 +17,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->job(CreateMonthlyReport::class)->monthly()->at('00:01');
+
+        // Uncomment the following line and comment line:25 to see that works
+        // $schedule->job(CreateMonthlyReport::class)->everyMinute();
     }
 
     /**
