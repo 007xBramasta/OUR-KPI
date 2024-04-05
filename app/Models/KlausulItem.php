@@ -14,6 +14,7 @@ class KlausulItem extends Model
     use HasFactory, HasUuids;
 
     protected $guarded = [];
+    public $timestamps = false;
     
     public function children(): HasMany
     {
