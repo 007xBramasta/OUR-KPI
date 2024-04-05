@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Laporan;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
+use App\Models\Klausul;
+use Illuminate\Support\Facades\Validator;
 
 class PenilaianController extends Controller
 {
@@ -14,7 +16,7 @@ class PenilaianController extends Controller
     {
         $laporan = Laporan::where('laporan_id', '=', $laporanId)->firstOrFail();
 
-        $data = \App\Models\Klausul::with('klausul_items.penilaians')
+        $data = Klausul::with('klausul_items.penilaians')
             ->whereHas('klausul_items.penilaians', function ($query) use ($laporanId) {
                 $query->where('laporan_id', $laporanId);
             })
@@ -113,5 +115,41 @@ class PenilaianController extends Controller
                 "penilaians" => $transformedData
             ]
         ]);
+    }
+
+    public function update_rekomendasi($penilaianId, Request $request)
+    {
+        // dapatkan data penilaian
+        $penilaian = Penilaian::where('id', '=', $penilaianId)->first();
+
+        // kembalikan response 403 jika user tidak memenuhi syarat update_rekomendasi dari policy
+        if ($request->user()->cannot('update_rekomendasi', $penilaian)) {
+            return response([
+                'error' => 'Anda tidak memiliki akses.'
+            ],403);
+        }
+
+        $rules = [
+            'rekomendasi' => 'required|max:300'
+        ];
+        $validator =  Validator::make($request->all(), $rules);
+
+        // jika validasi request gagal kembalikan response 404
+        if($validator->fails()){
+            return response()->json([
+                'errors' => $validator->getMessageBag()
+            ],422);
+        }
+
+        // ubah nilai rekomendasi dari penilaian terkait dengan nilai rekomendasi dari request
+        if($validator->passes()){
+            $penilaian->rekomendasi = $request->rekomendasi;
+            $penilaian->save();
+
+            return response()->json([
+                'message' => 'Rekomendasi telah diupdate.',
+                'data' => $penilaian
+            ]);
+        }
     }
 }
