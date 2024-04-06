@@ -12,7 +12,7 @@ class Penilaian extends Model
     use HasFactory, HasUuids;
 
     protected $guarded = [
-        'id'
+        'id',    
     ];
 
     public $timestamps = false;
