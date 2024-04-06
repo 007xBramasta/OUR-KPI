@@ -1,39 +1,26 @@
 <?php
-
 namespace App\Http\Services;
+
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Models\Laporan;
 
 class LaporanService
 {
-    public function getMonthlyReport($month)
+    public function getMonthlyReport($month, $year = null)
     {
-        DB::enableQueryLog(); // Enable query log
+        $laporanQuery = Laporan::query();
+
+        if (!is_null($year)) {
+            $laporanQuery->whereYear('created_at', $year);
+        }
 
         if (strlen($month) === 1) {
-    
-            $query = DB::table('laporan')
-                ->whereRaw("SUBSTRING(created_at, 6, 2) = ?", [$month]);
-
-            Log::info($query->toSql(), $query->getBindings()); 
-
-            return $query->get();
-        }
-
-        if (strlen($month) > 1) {
-            
+            $laporanQuery->whereMonth('created_at', $month);
+        } elseif (strlen($month) > 1) {
             $months = explode(',', $month);
-
-            $query = DB::table('laporan')
-                ->where(function ($query) use ($months) {
-                    foreach ($months as $month) {
-                        $query->orWhereRaw("SUBSTRING(created_at, 6, 2) = ?", [$month]);
-                    }
-                });
-
-            Log::info($query->toSql(), $query->getBindings()); // Log the SQL query
-
-            return $query->get();
+            $laporanQuery->whereIn(DB::raw('MONTH(created_at)'), $months);
         }
+
+        return $laporanQuery->get();
     }
 }
