@@ -26,4 +26,9 @@ class PenilaianPolicy
 
         return $user->id === $laporan || $user->role === 'admin';
     }
+
+    public function update_rekomendasi(User $user, Penilaian $penilaian)
+    {
+        return $user->role === 'admin';
+    }
 }
