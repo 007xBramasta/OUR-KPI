@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Jobs\GenerateNewUserReport;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -45,29 +46,10 @@ class AuthController extends Controller
             'password' => bcrypt(request('password')),
             'departements_id' => request('departements_id'),
         ]);
-        $laporan = Laporan::create([
-            'user_id' => $user->id,
-            'departements_id' => $user->departements_id,
-        ]);
-        $klausuls = Klausul::all();
-        foreach ($klausuls as $klausul) {
-            DB::table('klausuls_laporans')->insert([
-                'id' => Str::uuid(),
-                'laporan_id' => $laporan->laporan_id,
-                'klausul_id' => $klausul->id,
-            ]);
-        }
-            
-        $klausulItems = KlausulItem::all();
-            // dd($klausulItems);
-        foreach ($klausulItems as $klausulItem) {
-            Penilaian::create([
-                'laporan_id' => $laporan->laporan_id,
-                'klausul_item_id' => $klausulItem->id,
-             ]);
-        }
         if($user){
+            dispatch(new GenerateNewUserReport($user));
             return response()->json(['message' => 'Register Berhasil'], 201);
+
         }else{
             return response()->json(['message' => 'Registrasi Gagal'], 400);
         }
