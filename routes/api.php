@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\PenilaianController;
-
+use App\Models\Penilaian;
 
 // Rute untuk autentikasi
 Route::prefix('auth')->group(function () {
@@ -22,11 +22,19 @@ Route::prefix('auth')->group(function () {
 
 // Rute untuk penilaian memerlukan autentikasi
 Route::middleware('auth.jwt')->group(function () {
-    Route::get('/penilaians', [PenilaianController::class, 'get_penilaian']);
-    Route::patch('/penilaians/{penilaianId}/klausuls/{klausulId}', [PenilaianController::class, 'update_penilaian']);
-    Route::patch('/penilaians/{penilaianId}/klausuls/{klausulId}/rekomendasi', [PenilaianController::class, 'update_rekomendasi']);
+    Route::prefix('penilaians')->group(function(){
+        Route::get('/', [PenilaianController::class, 'get_penilaian']);
+        Route::patch('/{penilaianId}/klausuls_items/{klausulItemId}', [PenilaianController::class, 'update_penilaian']);
+
+        Route::middleware('is.admin')->group(function(){
+            Route::patch('/{penilaianId}/klausul_items/{klausulItemId}/rekomendasi', [PenilaianController::class, 'update_rekomendasi']);
+            Route::patch('/{penilaianId}/klausul-items/{klausulItemId}/setuju',[PenilaianController::class, 'update_setuju']);
+        });
+    });
     Route::get('/laporan', [LaporanController::class, 'showMonthlyReport']);
     // Definisikan rute lainnya yang memerlukan autentikasi di sini
+
+    // Route for update penilaians rekomendasi, setuju 
 });
 Route::get('/departements', [DepartementController::class, 'get_departement']);
 Route::get('klausul', [PenilaianController::class, 'klausul']);

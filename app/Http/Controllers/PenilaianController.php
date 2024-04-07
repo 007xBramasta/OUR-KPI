@@ -45,6 +45,7 @@ class PenilaianController extends Controller
                                 'id' => $item->id,
                                 'title' => $item->title,
                                 'nilai' => [
+                                    'penilaian_id' => $item->penilaians->first()->id,
                                     'target' => $item->penilaians->first()->target,
                                     'aktual' => $item->penilaians->first()->aktual,
                                     'keterangan' => $item->penilaians->first()->keterangan,
@@ -56,6 +57,7 @@ class PenilaianController extends Controller
                                         'id' => $child->id,
                                         'title' => $child->title,
                                         'nilai' => [
+                                            'penilaian_id' => $child->penilaians->first()->id,
                                             'target' => $child->penilaians->first()->target,
                                             'aktual' => $child->penilaians->first()->aktual,
                                             'keterangan' => $child->penilaians->first()->keterangan,
@@ -173,7 +175,7 @@ class PenilaianController extends Controller
         ];
         $validator =  Validator::make($request->all(), $rules);
 
-        // jika validasi request gagal kembalikan response 404
+        // jika validasi request gagal kembalikan response 422
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->getMessageBag()
@@ -187,6 +189,35 @@ class PenilaianController extends Controller
 
             return response()->json([
                 'message' => 'Rekomendasi telah diupdate.',
+                'data' => $penilaian
+            ]);
+        }
+    }
+
+    public function update_setuju(string $penilaianId, string $klausulItemId, Request $request)
+    {
+        // dapatkan data penilaian
+        $penilaian = Penilaian::where('id', '=', $penilaianId)->first();
+
+        $rules = [
+            'setuju' => 'required|boolean'
+        ];
+
+        $validator =  Validator::make($request->only(['setuju']), $rules);
+        // jika validasi request gagal kembalikan response 422
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->getMessageBag()
+            ], 422);
+        }
+
+        // ubah nilai rekomendasi dari penilaian terkait dengan nilai rekomendasi dari request
+        if ($validator->passes()) {
+            $penilaian->disetujui = $request->setuju;
+            $penilaian->save();
+
+            return response()->json([
+                'message' => 'Penilaian telah disetujui.',
                 'data' => $penilaian
             ]);
         }
