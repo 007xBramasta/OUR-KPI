@@ -92,9 +92,9 @@ class LaporanController extends Controller
     private function generateCacheKey($userId, $month)
     {
         if ($month) {
-            return $userId . $month . 'Laporan';
+            return $userId . '-' . $month . '-' .'Laporan';
         } else {
-            return $userId . 'Laporan';
+            return $userId . '-' . 'Laporan';
         }
     }
 }
