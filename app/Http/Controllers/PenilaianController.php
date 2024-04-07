@@ -50,6 +50,7 @@ class PenilaianController extends Controller
                                     'aktual' => $item->penilaians->first()->aktual,
                                     'keterangan' => $item->penilaians->first()->keterangan,
                                     'rekomendasi' => $item->penilaians->first()->rekomendasi,
+                                    'disetujui' => $item->penilaians->first()->disetujui
                                 ],
                                 // Jika klausul item memiliki children, maka tampilkan children tersebut
                                 'children' => $item->children != [] ? $item->children->map(function ($child) {
@@ -62,6 +63,7 @@ class PenilaianController extends Controller
                                             'aktual' => $child->penilaians->first()->aktual,
                                             'keterangan' => $child->penilaians->first()->keterangan,
                                             'rekomendasi' => $child->penilaians->first()->rekomendasi,
+                                            'disetujui' => $child->penilaians->first()->disetujui
                                         ],
                                     ];
                                 }) : null // Jika tidak memiliki children, maka tampilkan null
