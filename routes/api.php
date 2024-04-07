@@ -35,7 +35,7 @@ Route::middleware('auth.jwt')->group(function () {
             });
         });
     });
-    Route::get('/laporan', [LaporanController::class, 'showMonthlyReport']);
+    Route::get('/laporan/{departementId}', [LaporanController::class, 'showMonthlyReport']);
     // Definisikan rute lainnya yang memerlukan autentikasi di sini
 
 });
