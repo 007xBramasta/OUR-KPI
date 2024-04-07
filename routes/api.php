@@ -25,7 +25,7 @@ Route::middleware('auth.jwt')->group(function () {
     Route::prefix('penilaians')->group(function () {
         Route::get('/', [PenilaianController::class, 'get_penilaian']);
         
-        Route::group(['prefix' => '{penilaianId}/klausul_items/{klausulItemId}'], function () {
+        Route::group(['prefix' => '{penilaianId}/klausul-items/{klausulItemId}'], function () {
             Route::patch('/', [PenilaianController::class, 'update_penilaian']);
         
             // Route for update penilaians rekomendasi, setuju 
