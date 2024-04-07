@@ -7,33 +7,72 @@ use App\Models\Laporan;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
 use App\Models\Klausul;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PenilaianController extends Controller
 {
 
-    public function get_penilaian(string $laporanId, Request $request)
+    public function get_penilaian(Request $request)
     {
-        $laporan = Laporan::where('laporan_id', '=', $laporanId)->firstOrFail();
+        $months = $request->input('months', [Carbon::now()->format('m')]);
+        $laporanQuery = Laporan::query();
 
-        $data = Klausul::with('klausul_items.penilaians')
-            ->whereHas('klausul_items.penilaians', function ($query) use ($laporanId) {
-                $query->where('laporan_id', $laporanId);
-            })
-            ->get();
+        if (auth()->user()->role !== 'admin') {
+            $laporanQuery->where('user_id', '=', auth()->user()->id);
+        }
 
-        $transformedData = $data->map(function ($klausul) {
+        $laporanQuery->whereIn(DB::raw('MONTH(created_at)'), $months);
+        $laporanQuery->with('klausuls.klausul_items.penilaians');
+        $data = $laporanQuery->get();
+
+        $transformedData = $data->map(function ($report) {
+            // Transform data laporan ke dalam bentuk yang diinginkan
             return [
-                'klausul_id' => $klausul->id,
-                'klausul_name' => $klausul->name,
-                'klausul_items' => mapItems($klausul->klausul_items)
+                'laporan_id' => $report->laporan_id,
+                'klausuls' => $report->klausuls->map(function ($klausul) {
+                    // Transform data klausul ke dalam bentuk yang diinginkan
+                    return [
+                        'id' => $klausul->id,
+                        'name' => $klausul->name,
+                        'klausul_items' => $klausul->klausul_items->map(function ($item) {
+                            // Transform data klausul item ke dalam bentuk yang diinginkan
+                            if ($item->parent_id != null) { // Jika klausul item adalah child, maka tidak perlu ditampilkan
+                                return; // Skip item
+                            }
+                            return [
+                                'id' => $item->id,
+                                'title' => $item->title,
+                                'nilai' => [
+                                    'target' => $item->penilaians->first()->target,
+                                    'aktual' => $item->penilaians->first()->aktual,
+                                    'keterangan' => $item->penilaians->first()->keterangan,
+                                    'rekomendasi' => $item->penilaians->first()->rekomendasi,
+                                ],
+                                // Jika klausul item memiliki children, maka tampilkan children tersebut
+                                'children' => $item->children != [] ? $item->children->map(function ($child) {
+                                    return [
+                                        'id' => $child->id,
+                                        'title' => $child->title,
+                                        'nilai' => [
+                                            'target' => $child->penilaians->first()->target,
+                                            'aktual' => $child->penilaians->first()->aktual,
+                                            'keterangan' => $child->penilaians->first()->keterangan,
+                                            'rekomendasi' => $child->penilaians->first()->rekomendasi,
+                                        ],
+                                    ];
+                                }) : null // Jika tidak memiliki children, maka tampilkan null
+                            ];
+                        })->filter()->values() // Filter item yang bernilai null
+                    ];
+                })
             ];
-        })->values();
+        });
 
         return response()->json([
             'message' => 'Data penilaian berhasil diperoleh.',
             'data' => [
-                'laporan' => Laporan::where('laporan_id', $laporanId)->first(),
                 'penilaians' => $transformedData
             ]
         ]);
@@ -61,13 +100,13 @@ class PenilaianController extends Controller
     public function update_penilaian(string $penilaianId, string $klausulItemId, Request $request)
     {
         $penilaian = Penilaian::where('id', '=', $penilaianId)
-        ->where('klausul_item_id', '=', $klausulItemId)
-        ->firstOrFail();
-        
+            ->where('klausul_item_id', '=', $klausulItemId)
+            ->firstOrFail();
+
         if ($request->user()->cannot('update', $penilaian)) {
             return response([
                 'error' => 'Anda tidak memiliki akses.'
-            ],403);
+            ], 403);
         }
 
         if ($penilaian->laporan_id != auth()->user()) {
@@ -126,7 +165,7 @@ class PenilaianController extends Controller
         if ($request->user()->cannot('update_rekomendasi', $penilaian)) {
             return response([
                 'error' => 'Anda tidak memiliki akses.'
-            ],403);
+            ], 403);
         }
 
         $rules = [
@@ -135,14 +174,14 @@ class PenilaianController extends Controller
         $validator =  Validator::make($request->all(), $rules);
 
         // jika validasi request gagal kembalikan response 404
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->getMessageBag()
-            ],422);
+            ], 422);
         }
 
         // ubah nilai rekomendasi dari penilaian terkait dengan nilai rekomendasi dari request
-        if($validator->passes()){
+        if ($validator->passes()) {
             $penilaian->rekomendasi = $request->rekomendasi;
             $penilaian->save();
 
