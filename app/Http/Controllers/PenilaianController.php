@@ -27,77 +27,13 @@ class PenilaianController extends Controller
         $laporanQuery->with('klausuls.klausul_items.penilaians');
         $data = $laporanQuery->get();
 
-        $transformedData = $data->map(function ($report) {
-            // Transform data laporan ke dalam bentuk yang diinginkan
-            return [
-                'laporan_id' => $report->laporan_id,
-                'klausuls' => $report->klausuls->map(function ($klausul) {
-                    // Transform data klausul ke dalam bentuk yang diinginkan
-                    return [
-                        'id' => $klausul->id,
-                        'name' => $klausul->name,
-                        'klausul_items' => $klausul->klausul_items->map(function ($item) {
-                            // Transform data klausul item ke dalam bentuk yang diinginkan
-                            if ($item->parent_id != null) { // Jika klausul item adalah child, maka tidak perlu ditampilkan
-                                return; // Skip item
-                            }
-                            return [
-                                'id' => $item->id,
-                                'title' => $item->title,
-                                'nilai' => [
-                                    'penilaian_id' => $item->penilaians->first()->id,
-                                    'target' => $item->penilaians->first()->target,
-                                    'aktual' => $item->penilaians->first()->aktual,
-                                    'keterangan' => $item->penilaians->first()->keterangan,
-                                    'rekomendasi' => $item->penilaians->first()->rekomendasi,
-                                    'disetujui' => $item->penilaians->first()->disetujui
-                                ],
-                                // Jika klausul item memiliki children, maka tampilkan children tersebut
-                                'children' => $item->children != [] ? $item->children->map(function ($child) {
-                                    return [
-                                        'id' => $child->id,
-                                        'title' => $child->title,
-                                        'nilai' => [
-                                            'penilaian_id' => $child->penilaians->first()->id,
-                                            'target' => $child->penilaians->first()->target,
-                                            'aktual' => $child->penilaians->first()->aktual,
-                                            'keterangan' => $child->penilaians->first()->keterangan,
-                                            'rekomendasi' => $child->penilaians->first()->rekomendasi,
-                                            'disetujui' => $child->penilaians->first()->disetujui
-                                        ],
-                                    ];
-                                }) : null // Jika tidak memiliki children, maka tampilkan null
-                            ];
-                        })->filter()->values() // Filter item yang bernilai null
-                    ];
-                })
-            ];
-        });
+        $transformedData = mapReportJson($data);
 
         return response()->json([
             'message' => 'Data penilaian berhasil diperoleh.',
             'data' => [
                 'penilaians' => $transformedData
             ]
-        ]);
-    }
-
-    public function edit_penilaian()
-    {
-        $laporanId = auth()->user()->laporan->first()->laporan_id;
-        $penilaians = Penilaian::where('laporan_id', '=', $laporanId)->with('klausul.klausul_items.penilaians')->get();
-        $transformedData = $penilaians->groupBy(function ($item) {
-            return $item->klausul->name;
-        })->map(function ($group) {
-            return [
-                'klausul_id' => $group->first()->klausul->id,
-                'klausul_name' => $group->first()->klausul->name,
-                'klausul_items' => mapItems($group->first()->klausul->klausul_items)
-            ];
-        })->values();
-
-        return response()->json([
-            'data' => $transformedData
         ]);
     }
 

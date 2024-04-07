@@ -1,59 +1,53 @@
 <?php
-function mapItems($klausulItems , ...$includes)
+
+
+function mapReportJson( $data)
 {
-    $items = [];
-    foreach ($klausulItems as $klausulItem) {
-        if ($klausulItem->parent_id === null) {
-            $item = [
-                'id' => $klausulItem->id,
-                'title' => $klausulItem->title,
-                'nilai' => [
-                    'penilaian_id' => $klausulItem->penilaians->first()->id,
-                    'target' => $klausulItem->penilaians->first()->target,
-                    'aktual' => $klausulItem->penilaians->first()->aktual,
-                    'keterangan' => $klausulItem->penilaians->first()->keterangan,
-                    'disetujui' => (bool) $klausulItem->penilaians->first()->disetujui
-                ],
-            ];
-            if(in_array('rekomendasi', $includes)){
-                $item['nilai']['rekomendasi'] = $klausulItem->first()->rekomendasi;
-            }
-            
-            $children = getChildren($klausulItem, $klausulItems, $includes);
-            $item['children'] = $children;
-            $items[] = $item;
-        }
-    }
-    return $items;
+    return $data->map(function ($report) {
+        // Transform data laporan ke dalam bentuk yang diinginkan
+        return [
+            'laporan_id' => $report->laporan_id,
+            'klausuls' => $report->klausuls->map(function ($klausul) {
+                // Transform data klausul ke dalam bentuk yang diinginkan
+                return [
+                    'id' => $klausul->id,
+                    'name' => $klausul->name,
+                    'klausul_items' => $klausul->klausul_items->map(function ($item) {
+                        // Transform data klausul item ke dalam bentuk yang diinginkan
+                        if ($item->parent_id != null) { // Jika klausul item adalah child, maka tidak perlu ditampilkan
+                            return; // Skip item
+                        }
+                        return [
+                            'id' => $item->id,
+                            'title' => $item->title,
+                            'nilai' => [
+                                'penilaian_id' => $item->penilaians->first()->id,
+                                'target' => $item->penilaians->first()->target,
+                                'aktual' => $item->penilaians->first()->aktual,
+                                'keterangan' => $item->penilaians->first()->keterangan,
+                                'rekomendasi' => $item->penilaians->first()->rekomendasi,
+                                'disetujui' => $item->penilaians->first()->disetujui
+                            ],
+                            // Jika klausul item memiliki children, maka tampilkan children tersebut
+                            'children' => $item->children != [] ? $item->children->map(function ($child) {
+                                return [
+                                    'id' => $child->id,
+                                    'title' => $child->title,
+                                    'nilai' => [
+                                        'penilaian_id' => $child->penilaians->first()->id,
+                                        'target' => $child->penilaians->first()->target,
+                                        'aktual' => $child->penilaians->first()->aktual,
+                                        'keterangan' => $child->penilaians->first()->keterangan,
+                                        'rekomendasi' => $child->penilaians->first()->rekomendasi,
+                                        'disetujui' => $child->penilaians->first()->disetujui
+                                    ],
+                                ];
+                            }) : null // Jika tidak memiliki children, maka tampilkan null
+                        ];
+                    })->filter()->values() // Filter item yang bernilai null
+                ];
+            })
+        ];
+    });
 }
 
-function getChildren($parent, $klausulItems, $attributes)
-{
-    $children = [];
-    foreach ($klausulItems as $klausulItem) {
-        if ($klausulItem->parent_id === $parent->id) {
-            $item = [
-                'id' => $klausulItem->id,
-                'title' => $klausulItem->title,
-                'nilai' => [
-                    'penilaian_id' => $klausulItem->penilaians->first()->id,
-                    'target'  => $klausulItem->penilaians->first()->target,
-                    'aktual'  => $klausulItem->penilaians->first()->aktual,
-                    'keterangan' => $klausulItem->penilaians->first()->keterangan,
-                    'disetujui' => (bool) $klausulItem->penilaians->first()->disetujui
-                ]
-            ];
-
-            if(in_array('rekomendasi', $attributes)){
-                $item['nilai']['rekomendasi'] = $klausulItem->first()->rekomendasi;
-            }
-
-            $nestedChildren = getChildren($klausulItem, $klausulItems, $attributes);
-            if (!empty($nestedChildren)) {
-                $item['children'] = $nestedChildren;
-            }
-            $children[] = $item;
-        }
-    }
-    return $children;
-}
