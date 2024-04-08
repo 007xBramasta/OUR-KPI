@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->job(CreateMonthlyReport::class)->monthly()->at('00:01');
+        $schedule->job(CreateMonthlyReport::class)->monthly()->at('00:01'); //ambil dari job CreateMonthlyReport
 
         // Uncomment the following line and comment line:25 to see that works
         // $schedule->job(CreateMonthlyReport::class)->everyMinute();

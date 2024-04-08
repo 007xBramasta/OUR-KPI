@@ -16,18 +16,19 @@ class PenilaianController extends Controller
 
     public function get_penilaian(Request $request)
     {
-        $months = $request->input('months', [Carbon::now()->format('m')]);
-        $laporanQuery = Laporan::query();
+        $months = $request->input('months', [Carbon::now()->format('m')]); // Ambil bulan dari request, defaultnya bulan saat ini
 
-        if (auth()->user()->role !== 'admin') {
-            $laporanQuery->where('user_id', '=', auth()->user()->id);
+        $laporanQuery = Laporan::query(); // Query builder untuk laporan
+
+        if (auth()->user()->role !== 'admin') { // Jika user bukan admin, maka laporan yang diambil hanya laporan yang dimiliki oleh user tersebut
+            $laporanQuery->where('user_id', '=', auth()->user()->id); // Filter laporan berdasarkan user id
         }
 
-        $laporanQuery->whereIn(DB::raw('MONTH(created_at)'), $months);
-        $laporanQuery->with('klausuls.klausul_items.penilaians');
+        $laporanQuery->whereIn(DB::raw('MONTH(created_at)'), $months); // Filter laporan berdasarkan bulan
+        $laporanQuery->with('klausuls.klausul_items.penilaians'); // Eager loading klausul, klausul item, dan penilaian
         $data = $laporanQuery->get();
 
-        $transformedData = mapReportJson($data);
+        $transformedData = mapReportJson($data); // Transformasi data laporan
 
         return response()->json([
             'message' => 'Data penilaian berhasil diperoleh.',
@@ -39,11 +40,11 @@ class PenilaianController extends Controller
 
     public function update_penilaian(string $penilaianId, string $klausulItemId, Request $request)
     {
-        $penilaian = Penilaian::where('id', '=', $penilaianId)
-            ->where('klausul_item_id', '=', $klausulItemId)
+        $penilaian = Penilaian::where('id', '=', $penilaianId) // Ambil data penilaian berdasarkan id
+            ->where('klausul_item_id', '=', $klausulItemId) // Filter berdasarkan klausul item id
             ->firstOrFail();
 
-        if ($request->user()->cannot('update', $penilaian)) {
+        if ($request->user()->cannot('update', $penilaian)) { // Jika user tidak memiliki akses untuk update penilaian, maka kembalikan response 403
             return response([
                 'error' => 'Anda tidak memiliki akses.'
             ], 403);
@@ -73,7 +74,7 @@ class PenilaianController extends Controller
 
     public function get_rekomendasi()
     {
-        $laporan = Laporan::where('user_id', auth()->user()->id)->firstOrFail();
+        $laporan = Laporan::where('user_id', auth()->user()->id)->firstOrFail(); //
         $data = $laporan->penilaian()->where('disetujui', '=', '1')
             ->with('klausul')
             ->get();

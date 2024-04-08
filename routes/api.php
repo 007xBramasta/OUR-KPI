@@ -23,10 +23,10 @@ Route::prefix('auth')->group(function () {
 // Rute untuk penilaian memerlukan autentikasi
 Route::middleware('auth.jwt')->group(function () {
     Route::prefix('penilaians')->group(function () {
-        Route::get('/', [PenilaianController::class, 'get_penilaian']);
+        Route::get('/', [PenilaianController::class, 'get_penilaian']); // Rute untuk mendapatkan data penilaian
         
         Route::group(['prefix' => '{penilaianId}/klausul-items/{klausulItemId}'], function () {
-            Route::patch('/', [PenilaianController::class, 'update_penilaian']);
+            Route::patch('/', [PenilaianController::class, 'update_penilaian']); // Rute untuk update penilaian
         
             // Route for update penilaians rekomendasi, setuju 
             Route::middleware('is.admin')->group(function(){
