@@ -42,32 +42,15 @@ class PenilaianController extends Controller
         ]);
     }
 
-    public function get_rekomendasi()
+    public function get_rekomendasi(Request $request)
     {
-        $laporan = Laporan::where('user_id', auth()->user()->id)->firstOrFail();
-        $data = $laporan->penilaian()->where('disetujui', '=', '1')
-            ->with('klausul')
-            ->get();
-        $transformedData = [];
-        foreach ($data as $penilaian) {
-            $transformedData[] = [
-                'klausul' => $penilaian->klausul,
-                'target' => $penilaian->penilaian_target,
-                'aktual' => $penilaian->penilaian_aktual,
-                'keterangan' => $penilaian->penilaian_keterangan,
-                'rekomendasi' => $penilaian->rekomendasi
-            ];
-        }
-
+        $rekomendasi = $this->penilaianService->getPenilaian($request);
         return response()->json([
-            'data' => [
-                "laporan" => $laporan,
-                "penilaians" => $transformedData
-            ]
+            'data' => $rekomendasi
         ]);
     }
 
-    public function update_rekomendasi($penilaianId, Request $request)
+    public function update_rekomendasi($penilaianId , Request $request)
     {
 
         $rules = [

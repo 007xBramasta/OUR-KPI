@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\Resources\PenilaianResource;
 use App\Models\KlausulItem;
 use App\Models\Laporan;
 use App\Models\Penilaian;
@@ -33,11 +34,7 @@ class PenilaianService
     private function getDetailPenilaian(KlausulItem $item, $laporanId){
 
         $penilaian = $item->penilaians()->where('laporan_id', $laporanId)->first();
-        return [
-            'penilaian_id' => $penilaian->id,
-            'aktual' => $penilaian->aktual,
-            'keterangan' => $penilaian->keterangan
-        ];
+        return new PenilaianResource($penilaian);
     }
 
     private function transformData(Collection $data){
@@ -93,13 +90,7 @@ class PenilaianService
             }
         $penilaian->save();
 
-        $data = [
-            'penilaian_id' => $penilaian->id,
-            'target' => $penilaian->target,
-            'aktual' => $penilaian->aktual,
-            'keterangan' => $penilaian->keterangan,
-        ];
-        return $data;
+        return new PenilaianResource($penilaian);
     }
 
     public function updatePenilaianRekomendasi(string $penilaianId, string $rekomendasi)
@@ -107,14 +98,7 @@ class PenilaianService
         $penilaian = Penilaian::find($penilaianId);
         $penilaian->rekomendasi = $rekomendasi;
         $penilaian->save();   
-        $data = [
-            'penilaian_id' => $penilaian->id,
-            'target' => $penilaian->target,
-            'aktual' => $penilaian->aktual,
-            'keterangan' => $penilaian->keterangan,
-            'rekomendasi' => $penilaian->rekomendasi
-        ];
-
-        return $data;
+        
+        return new PenilaianResource($penilaian);
     }
 }
