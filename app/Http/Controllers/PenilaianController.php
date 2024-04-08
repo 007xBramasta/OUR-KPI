@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\PenilaianService;
 use App\Models\Laporan;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
@@ -14,26 +15,17 @@ use Illuminate\Support\Facades\Validator;
 class PenilaianController extends Controller
 {
 
+    public function __construct(protected PenilaianService $penilaianService)
+    {
+        
+    }
     public function get_penilaian(Request $request)
     {
-        $months = $request->input('months', [Carbon::now()->format('m')]);
-        $laporanQuery = Laporan::query();
-
-        if (auth()->user()->role !== 'admin') {
-            $laporanQuery->where('user_id', '=', auth()->user()->id);
-        }
-
-        $laporanQuery->whereIn(DB::raw('MONTH(created_at)'), $months);
-        $laporanQuery->with('klausuls.klausul_items.penilaians');
-        $data = $laporanQuery->get();
-
-        $transformedData = mapReportJson($data);
+        $penilaianData = $this->penilaianService->getPenilaian($request);
 
         return response()->json([
             'message' => 'Data penilaian berhasil diperoleh.',
-            'data' => [
-                'penilaians' => $transformedData
-            ]
+            'data' => $penilaianData
         ]);
     }
 
