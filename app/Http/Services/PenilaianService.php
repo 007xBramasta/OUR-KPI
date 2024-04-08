@@ -97,8 +97,24 @@ class PenilaianService
             'penilaian_id' => $penilaian->id,
             'target' => $penilaian->target,
             'aktual' => $penilaian->aktual,
-            'keterangan' => $penilaian->rekomendasi,
+            'keterangan' => $penilaian->keterangan,
         ];
+        return $data;
+    }
+
+    public function updatePenilaianRekomendasi(string $penilaianId, string $rekomendasi)
+    {
+        $penilaian = Penilaian::find($penilaianId);
+        $penilaian->rekomendasi = $rekomendasi;
+        $penilaian->save();   
+        $data = [
+            'penilaian_id' => $penilaian->id,
+            'target' => $penilaian->target,
+            'aktual' => $penilaian->aktual,
+            'keterangan' => $penilaian->keterangan,
+            'rekomendasi' => $penilaian->rekomendasi
+        ];
+
         return $data;
     }
 }

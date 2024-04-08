@@ -7,13 +7,7 @@ use App\Http\Services\PenilaianService;
 use App\Models\Laporan;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
-use App\Models\Klausul;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
-use function PHPUnit\Framework\isEmpty;
-
 class PenilaianController extends Controller
 {
 
@@ -75,15 +69,6 @@ class PenilaianController extends Controller
 
     public function update_rekomendasi($penilaianId, Request $request)
     {
-        // dapatkan data penilaian
-        $penilaian = Penilaian::where('id', '=', $penilaianId)->first();
-
-        // kembalikan response 403 jika user tidak memenuhi syarat update_rekomendasi dari policy
-        if ($request->user()->cannot('update_rekomendasi', $penilaian)) {
-            return response([
-                'error' => 'Anda tidak memiliki akses.'
-            ], 403);
-        }
 
         $rules = [
             'rekomendasi' => 'required|max:300'
@@ -99,12 +84,12 @@ class PenilaianController extends Controller
 
         // ubah nilai rekomendasi dari penilaian terkait dengan nilai rekomendasi dari request
         if ($validator->passes()) {
-            $penilaian->rekomendasi = $request->rekomendasi;
-            $penilaian->save();
+
+            $updatedData = $this->penilaianService->updatePenilaianRekomendasi($penilaianId, $request->rekomendasi);
 
             return response()->json([
                 'message' => 'Rekomendasi telah diupdate.',
-                'data' => $penilaian
+                'data' => $updatedData
             ]);
         }
     }
