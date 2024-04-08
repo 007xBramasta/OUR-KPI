@@ -30,6 +30,8 @@ class PenilaianService
 
             $queryResult = $laporanQuery->get();
             $transformedData = $this->transformData($queryResult);
+            Log::info('Data transformed successfully.');
+
             return $transformedData;
         } catch (\Exception $exception) {
             throw $exception;
@@ -96,6 +98,7 @@ class PenilaianService
                 }
             }
             $penilaian->save();
+            Log::info('Penilaian updated successfully.');
 
             return new PenilaianResource($penilaian);
         } catch (\Exception $exception) {
@@ -109,6 +112,7 @@ class PenilaianService
             $penilaian = Penilaian::find($penilaianId);
             $penilaian->rekomendasi = $rekomendasi;
             $penilaian->save();
+            Log::info('Rekomendasi penilaian updated successfully.');
 
             return new PenilaianResource($penilaian);
         } catch (\Exception $exception) {
