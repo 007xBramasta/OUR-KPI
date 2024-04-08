@@ -10,34 +10,40 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PenilaianService
 {
 
     public function getPenilaian(Request $request)
     {
-        $months = $request->input('months', [Carbon::now()->format('m')]);
-        $laporanQuery = Laporan::query();
+        try {
+            $months = $request->input('months', [Carbon::now()->format('m')]);
+            $laporanQuery = Laporan::query();
 
-        if (auth()->user()->role !== 'admin') {
-            $laporanQuery->where('user_id', '=', auth()->user()->id);
+            if (auth()->user()->role !== 'admin') {
+                $laporanQuery->where('user_id', '=', auth()->user()->id);
+            }
+
+            $laporanQuery->whereIn(DB::raw('MONTH(created_at)'), $months);
+            $laporanQuery->with('klausuls.klausul_items');
+
+            $queryResult = $laporanQuery->get();
+            $transformedData = $this->transformData($queryResult);
+            return $transformedData->salah;
+        } catch (\Exception $exception) {
+            throw $exception;
         }
-
-        $laporanQuery->whereIn(DB::raw('MONTH(created_at)'), $months);
-        $laporanQuery->with('klausuls.klausul_items');
-
-        $queryResult = $laporanQuery->get();
-        $transformedData = $this->transformData($queryResult);
-        return $transformedData;
     }
 
-    private function getDetailPenilaian(KlausulItem $item, $laporanId){
-
+    private function getDetailPenilaian(KlausulItem $item, $laporanId)
+    {
         $penilaian = $item->penilaians()->where('laporan_id', $laporanId)->first();
         return new PenilaianResource($penilaian);
     }
 
-    private function transformData(Collection $data){
+    private function transformData(Collection $data)
+    {
         return $data->map(function ($report) {
             // Transform data laporan ke dalam bentuk yang diinginkan
             return [
@@ -74,31 +80,40 @@ class PenilaianService
 
     public function updatePenilaian(string $penilaianId, Request $request)
     {
-        $penilaian = Penilaian::where('id', '=', $penilaianId)
-            ->firstOrFail();
+        try {
+            $penilaian = Penilaian::where('id', '=', $penilaianId)
+                ->firstOrFail();
 
             if ($request->has('aktual')) {
                 if ($request->aktual != $penilaian->aktual) {
                     $penilaian->aktual = $request->aktual;
                 }
             }
-    
+
             if ($request->has('keterangan')) {
                 if ($request->keterangan != $penilaian->keterangan) {
                     $penilaian->keterangan = $request->keterangan;
                 }
             }
-        $penilaian->save();
+            $penilaian->save();
 
-        return new PenilaianResource($penilaian);
+            return new PenilaianResource($penilaian);
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
     }
 
     public function updatePenilaianRekomendasi(string $penilaianId, string $rekomendasi)
     {
-        $penilaian = Penilaian::find($penilaianId);
-        $penilaian->rekomendasi = $rekomendasi;
-        $penilaian->save();   
-        
-        return new PenilaianResource($penilaian);
+        try {
+            $penilaian = Penilaian::find($penilaianId);
+            $penilaian->rekomendasi = $rekomendasi;
+            $penilaian->save();
+
+            return new PenilaianResource($penilaian);
+        } catch (\Exception $exception) {
+            Log::debug($exception->getMessage());
+            throw $exception;
+        }
     }
 }
