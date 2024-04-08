@@ -30,7 +30,7 @@ class PenilaianService
 
             $queryResult = $laporanQuery->get();
             $transformedData = $this->transformData($queryResult);
-            return $transformedData->salah;
+            return $transformedData;
         } catch (\Exception $exception) {
             throw $exception;
         }
