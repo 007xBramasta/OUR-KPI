@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Models\KlausulItem;
 use App\Models\Laporan;
+use App\Models\Penilaian;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -72,5 +73,32 @@ class PenilaianService
                 })
             ];
         });
+    }
+
+    public function updatePenilaian(string $penilaianId, Request $request)
+    {
+        $penilaian = Penilaian::where('id', '=', $penilaianId)
+            ->firstOrFail();
+
+            if ($request->has('aktual')) {
+                if ($request->aktual != $penilaian->aktual) {
+                    $penilaian->aktual = $request->aktual;
+                }
+            }
+    
+            if ($request->has('keterangan')) {
+                if ($request->keterangan != $penilaian->keterangan) {
+                    $penilaian->keterangan = $request->keterangan;
+                }
+            }
+        $penilaian->save();
+
+        $data = [
+            'penilaian_id' => $penilaian->id,
+            'target' => $penilaian->target,
+            'aktual' => $penilaian->aktual,
+            'keterangan' => $penilaian->rekomendasi,
+        ];
+        return $data;
     }
 }

@@ -12,6 +12,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+use function PHPUnit\Framework\isEmpty;
+
 class PenilaianController extends Controller
 {
 
@@ -29,37 +31,20 @@ class PenilaianController extends Controller
         ]);
     }
 
-    public function update_penilaian(string $penilaianId, string $klausulItemId, Request $request)
+    public function update_penilaian(string $penilaianId,Request $request)
     {
-        $penilaian = Penilaian::where('id', '=', $penilaianId)
-            ->where('klausul_item_id', '=', $klausulItemId)
-            ->firstOrFail();
-
-        if ($request->user()->cannot('update', $penilaian)) {
+        
+        if ($request->user()->cannot('update', Penilaian::find($penilaianId))) {
             return response([
                 'error' => 'Anda tidak memiliki akses.'
             ], 403);
         }
 
-        if ($penilaian->laporan_id != auth()->user()) {
-        }
-
-        if ($request->has('aktual')) {
-            if ($request->aktual != $penilaian->aktual) {
-                $penilaian->aktual = $request->aktual;
-            }
-        }
-
-        if ($request->has('keterangan')) {
-            if ($request->keterangan != $penilaian->keterangan) {
-                $penilaian->keterangan = $request->keterangan;
-            }
-        }
-
-        $penilaian->save();
+        $penilaian =  $this->penilaianService->updatePenilaian($penilaianId, $request);
 
         return response()->json([
-            'message' => 'Penilaian berhasil diperbaharui.'
+            'message' => 'Penilaian berhasil diperbaharui.',
+            'data' => $penilaian
         ]);
     }
 
