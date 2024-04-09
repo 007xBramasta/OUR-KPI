@@ -22,6 +22,8 @@ class LaporanController extends Controller
     {
         $month = $request->query('month');
         $user = auth()->user();
+        // NOTE: harus di implement validation terhadap request query 'month' kalo request query tidak ada
+        // return 400 Bad request 
         $cacheKey = $this->generateCacheKey($user->id, $month);
 
         // Check if data exists in cache
