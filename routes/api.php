@@ -21,6 +21,7 @@ Route::prefix('auth')->group(function () {
 
 // Rute untuk penilaian memerlukan autentikasi
 Route::middleware('auth.jwt')->group(function () {
+    Route::get('/rekomendasi', [PenilaianController::class, 'get_rekomendasi']); 
     Route::prefix('penilaians')->group(function () {
         Route::get('/', [PenilaianController::class, 'get_penilaian']); // Rute untuk mendapatkan data penilaian
 
