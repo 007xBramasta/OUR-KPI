@@ -18,7 +18,7 @@ use Illuminate\Queue\SerializesModels;
  * @email marselinus.hr@gmail.com
  * @github marselhr
  */
-class CreateMonthlyReport implements ShouldQueue
+class CreateMonthlyReport implements ShouldQueue // di eksekusi setiap bulan oleh scheduler
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -39,7 +39,7 @@ class CreateMonthlyReport implements ShouldQueue
      */
     public function handle()
     {
-        $users = User::where('role', '=', 'karyawan')->get();
+        $users = User::where('role', '=', 'karyawan')->get(); //di panggil di Kernel.php di schedule
         $klausul_items = KlausulItem::all();
 
         foreach($users as $user ){

@@ -16,7 +16,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class GenerateNewUserReport implements ShouldQueue
+class GenerateNewUserReport implements ShouldQueue // di panggil saat user register
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

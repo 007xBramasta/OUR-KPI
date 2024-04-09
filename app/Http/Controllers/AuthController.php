@@ -3,14 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Laporan;
-use App\Models\Penilaian;
-use App\Models\KlausulItem;
-use App\Models\Klausul;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Jobs\GenerateNewUserReport;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -24,9 +17,9 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
-    
+
     public function register()
     {
         $validator = Validator::make(request()->all(), [
@@ -36,7 +29,7 @@ class AuthController extends Controller
             'departements_id' => 'required',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json($validator->messages());
         }
 
@@ -46,11 +39,10 @@ class AuthController extends Controller
             'password' => bcrypt(request('password')),
             'departements_id' => request('departements_id'),
         ]);
-        if($user){
+        if ($user) {
             dispatch(new GenerateNewUserReport($user));
             return response()->json(['message' => 'Register Berhasil'], 201);
-
-        }else{
+        } else {
             return response()->json(['message' => 'Registrasi Gagal'], 400);
         }
     }
@@ -58,11 +50,11 @@ class AuthController extends Controller
     public function login()
     {
         $credentials = request(['email', 'password']);
-    
-        if (! $token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
-    
+
         return $this->respondWithToken($token);
     }
 
@@ -95,7 +87,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(JWTAuth::refresh());
     }
 
     /**
