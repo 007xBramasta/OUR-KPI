@@ -101,7 +101,7 @@ class PenilaianController extends Controller
         }
     }
 
-    public function update_setuju(string $penilaianId, string $klausulItemId, Request $request)
+    public function update_setuju(string $penilaianId, Request $request)
     {
         try {
             // dapatkan data penilaian
