@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Jobs\GenerateNewUserReport;
+use App\Models\Departement;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -65,7 +66,14 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        $user = auth()->user();
+        $departement_name = Departement::where('departements_id', '=', $user->departements_id)->first()->departements_name;
+        $data  = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'departement_name' => $departement_name,
+        ];
+        return response()->json($data);
     }
 
     /**
