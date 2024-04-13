@@ -20,9 +20,10 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,    
-        \Spatie\HttpLogger\Middlewares\HttpLogger::class
-        
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\Cors::class,
+        // \Spatie\HttpLogger\Middlewares\HttpLogger::class
+
     ];
 
     /**
