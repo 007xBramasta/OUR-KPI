@@ -52,15 +52,5 @@ class GenerateNewUserReport implements ShouldQueue // di panggil saat user regis
                 'klausul_item_id' => $item->id,
             ]);
         }
-
-        // insert to pivot table
-        $klausuls = Klausul::all();
-        foreach($klausuls as $klausul){
-            DB::table('klausuls_laporans')->insert([
-                'id' => Str::uuid(),
-                'laporan_id' => $laporan->laporan_id,
-                'klausul_id' => $klausul->id
-            ]);
-        }
     }
 }
