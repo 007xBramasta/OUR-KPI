@@ -31,12 +31,7 @@ class Laporan extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
-    public function rekomendasi(): HasMany
-    {
-        return $this->hasMany(Rekomendasi::class, 'laporan_id', 'laporan_id');
-    }
-
+    
     public function penilaians():HasMany
     {
         return $this->hasMany(Penilaian::class, 'laporan_id', 'laporan_id');
@@ -44,11 +39,6 @@ class Laporan extends Model
 
     public function klausul_items(): HasManyThrough
     {
-        return $this->hasManyThrough(KlausulItem::class, Penilaian::class, 'klausul_item_id', 'id', 'laporan_id');
-    }
-
-    public function klausuls(): BelongsToMany
-    {
-        return $this->belongsToMany(Klausul::class, 'klausuls_laporans', 'laporan_id', 'klausul_id');
+        return $this->hasManyThrough(KlausulItem::class, Penilaian::class, 'laporan_id', 'id', 'laporan_id', 'klausul_item_id');
     }
 }
