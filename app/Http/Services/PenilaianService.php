@@ -55,8 +55,8 @@ class PenilaianService
                         }
                         $data = new PenilaianResource($penilaian);
                         return $data;
-                    });
-                })
+                    })->filter()->values();
+                })->filter()->values()
             ];
         });
     }
