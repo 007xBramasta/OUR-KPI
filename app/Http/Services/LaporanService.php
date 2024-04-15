@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\PenilaianResource;
+use App\Models\Klausul;
 use Illuminate\Database\Eloquent\Collection;
 
 class LaporanService
@@ -19,7 +20,6 @@ class LaporanService
         try {
             $laporanQuery = Laporan::query()
                 ->where('departements_id', $departementId)
-                ->with('klausuls.klausul_items')
                 ->whereMonth('created_at', $month);
 
             if ($user->role === 'karyawan') {
@@ -38,44 +38,31 @@ class LaporanService
         }
     }
 
-    public function getDetailPenilaian(KlausulItem $item, $laporanId)
-    {
-        $penilaian = $item->penilaians()->where('laporan_id', $laporanId)->first();
-        return new PenilaianResource($penilaian);
-    }
-
     protected function transformData(Collection $reports)
     {
         return $reports->map(function ($report) {
             // Transform data laporan ke dalam bentuk yang diinginkan    
+
+            // get klausuls
+            $klausuls = Klausul::all();
             return [
                 'laporan_id' => $report->laporan_id,
-                'klausuls' => $report->klausuls->map(function ($klausul) use ($report) {
-                    // Transform data klausul ke dalam bentuk yang diinginkan
-                    return [
-                        'id' => $klausul->id,
-                        'name' => $klausul->name,
-                        'klausul_items' => $klausul->klausul_items->map(function ($item) use ($report) {
-                            // Transform data klausul item ke dalam bentuk yang diinginkan
-                            if ($item->parent_id !== null) { // Jika klausul item adalah child, maka tidak perlu ditampilkan
-                                return; //
-                            }
-                            return [
-                                'id' => $item->id,
-                                'title' => $item->title,
-                                'nilai' => $this->getDetailPenilaian($item, $report->laporan_id),
-                                // Jika klausul item memiliki children, maka tampilkan children tersebut
-                                'children' => $item->children != [] ? $item->children->map(function ($child) use ($report) {
-                                    return [
-                                        'id' => $child->id,
-                                        'title' => $child->title,
-                                        'nilai' => $this->getDetailPenilaian($child, $report->laporan_id),
-                                    ];
-                                }) : null
-                            ];
-                        })->filter()->values(),
-                    ];
+                'klausuls' => $klausuls->map(function ($klausul){
+                    // map string of klausul name
+                    return $klausul->name;
                 }),
+                "klausulItems" => $klausuls->map(function ($k) use ($report) {
+                    // return item dari setiap klausul
+                    return $k->klausul_items->map(function ($item) use ($report) {
+
+                        $penilaian = $item->penilaians()->where('laporan_id', '=', $report->laporan_id)->first();
+                        if ($item->parent_id != null) { // Jika klausul item adalah child, maka tidak perlu ditampilkan
+                            return; // Skip item
+                        }
+                        $data = new PenilaianResource($penilaian);
+                        return $data;
+                    });
+                })
             ];
         });
     }
