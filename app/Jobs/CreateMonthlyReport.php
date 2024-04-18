@@ -43,6 +43,10 @@ class CreateMonthlyReport implements ShouldQueue // di eksekusi setiap bulan ole
         $klausul_items = KlausulItem::all();
 
         foreach($users as $user ){
+            $laporan = $user->laporan()->whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->first();
+            if($laporan){
+                return;
+            }
             $laporan = Laporan::create([
                 'user_id' => $user->id,
                 'departements_id' => $user->departements_id
