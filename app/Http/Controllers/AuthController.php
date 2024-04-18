@@ -73,6 +73,7 @@ class AuthController extends Controller
             'email' => $user->email,
             'role' => $user->role,
             'departement_name' => $departement_name,
+            'departement_id' => $user->departements_id
         ];
         return response()->json($data);
     }
