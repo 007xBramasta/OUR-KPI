@@ -19,12 +19,12 @@ class LaporanService
         $user = Auth::user();
 
         try {
-            $cacheKey = $this->generateCacheKey($user->id, $month);
+            // $cacheKey = $this->generateCacheKey($user->id, $month);
 
-            if (Cache::has($cacheKey)) {
-                Log::info('Returning data from cache');
-                $transformedData = Cache::get($cacheKey);
-            }
+            // if (Cache::has($cacheKey)) {
+            //     Log::info('Returning data from cache');
+            //     $transformedData = Cache::get($cacheKey);
+            // }
 
             $laporanQuery = Laporan::query()
                 ->where('departements_id', $departementId)
@@ -39,13 +39,13 @@ class LaporanService
 
             $transformedData = $this->transformData($laporanQuery->get());
 
-            if (!Cache::has($cacheKey)) {
-                Cache::put($cacheKey, [
-                    'data' => $transformedData,
-                    'total' => $transformedData->count()
-                ], now()->addHour());
-                Log::info('Caching laporan data');
-            }
+            // if (!Cache::has($cacheKey)) {
+            //     Cache::put($cacheKey, [
+            //         'data' => $transformedData,
+            //         'total' => $transformedData->count()
+            //     ], now()->addHour());
+            //     Log::info('Caching laporan data');
+            // }
 
             return $transformedData;
         } catch (\Exception $e) {
