@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\PenilaianResource;
 use App\Models\Klausul;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class LaporanService
 {
@@ -18,6 +19,13 @@ class LaporanService
         $user = Auth::user();
 
         try {
+            $cacheKey = $this->generateCacheKey($user->id, $month);
+
+            if (Cache::has($cacheKey)) {
+                Log::info('Returning data from cache');
+                $transformedData = Cache::get($cacheKey);
+            }
+
             $laporanQuery = Laporan::query()
                 ->where('departements_id', $departementId)
                 ->whereMonth('created_at', $month);
@@ -30,6 +38,14 @@ class LaporanService
             Log::info('Monthly report query executed', ['query' => $laporanQuery->toSql(), 'bindings' => $laporanQuery->getBindings()]);
 
             $transformedData = $this->transformData($laporanQuery->get());
+
+            if (!Cache::has($cacheKey)) {
+                Cache::put($cacheKey, [
+                    'data' => $transformedData,
+                    'total' => $transformedData->count()
+                ], now()->addHour());
+                Log::info('Caching laporan data');
+            }
 
             return $transformedData;
         } catch (\Exception $e) {
@@ -47,7 +63,7 @@ class LaporanService
             $klausuls = Klausul::all();
             return [
                 'laporan_id' => $report->laporan_id,
-                'klausuls' => $klausuls->map(function ($klausul){
+                'klausuls' => $klausuls->map(function ($klausul) {
                     // map string of klausul name
                     return $klausul->name;
                 }),
@@ -61,9 +77,19 @@ class LaporanService
                         }
                         $data = new PenilaianResource($penilaian);
                         return $data;
-                    });
-                })
+                    })->filter()->values();
+                })->filter()->values()
             ];
         });
+    }
+
+
+    private function generateCacheKey($userId, $month)
+    {
+        if ($month) {
+            return $userId . '-' . $month . '-' . 'Laporan';
+        } else {
+            return $userId . '-' . 'Laporan';
+        }
     }
 }

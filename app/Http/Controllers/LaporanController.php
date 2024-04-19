@@ -27,21 +27,7 @@ class LaporanController extends Controller
         }
 
         try {
-            $cacheKey = $this->generateCacheKey(Auth::user()->id, $month);
-
-            if (Cache::has($cacheKey)) {
-                $cachedData = Cache::get($cacheKey);
-                Log::info('Returning data from cache', ['key' => $cacheKey, 'data' => $cachedData]);
-                return response()->json($cachedData);
-            }
-
             $transformedData = $this->reportService->getMonthlyReport($departementId, $month);
-            
-            Cache::put($cacheKey, [
-                'data' => $transformedData,
-                'total' => $transformedData->count()
-            ], now()->addHour());
-            Log::info('Caching laporan data', ['key' => $cacheKey, 'data' => $transformedData]);
 
             return response()->json([
                 'data' => $transformedData,
@@ -51,15 +37,6 @@ class LaporanController extends Controller
             Log::error('Failed to fetch monthly report', ['error' => $e->getMessage()]);
             // Tambahkan penanganan error
             return response()->json(['error' => 'Failed to fetch monthly report'], 500);
-        }
-    }
-
-    private function generateCacheKey($userId, $month)
-    {
-        if ($month) {
-            return $userId . '-' . $month . '-' .'Laporan';
-        } else {
-            return $userId . '-' . 'Laporan';
         }
     }
 }
