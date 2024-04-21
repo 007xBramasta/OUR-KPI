@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class PenilaianService
 {
 
-    public function getPenilaian(Request $request)
+    public function getPenilaian(Request $request,  $departementId = null)
     {
         try {
             $months = $request->input('months', [Carbon::now()->format('m')]);
@@ -23,6 +23,10 @@ class PenilaianService
 
             if (auth()->user()->role !== 'admin') {
                 $laporanQuery->where('user_id', '=', auth()->user()->id);
+            }
+            //ketika admin mengambil data penilaian perdepartement
+            if($departementId !== null){
+                $laporanQuery->where('departements_id', '=', $departementId);
             }
 
             $laporanQuery->whereIn(DB::raw('MONTH(created_at)'), $months);
@@ -42,6 +46,7 @@ class PenilaianService
             $klausuls = Klausul::all();
             return [
                 'laporan_id' => $report->laporan_id,
+                'user' => $report->user->email,
                 'klausuls' => $klausuls->map(function ($klausul) {
                     return $klausul->name;
                 }),

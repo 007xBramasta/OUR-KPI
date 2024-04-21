@@ -23,10 +23,26 @@ class PenilaianController extends Controller
 
             return response()->json([
                 'message' => 'Data penilaian berhasil diperoleh.',
-                'data' => $penilaianData
+                'data' => $penilaianData,
+                'total' => count($penilaianData)
             ]);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
+            return response()->json([
+                'message' => 'Server error.'
+            ], 500);
+        }
+    }
+
+    public function get_penilaian_by_departement($departementId, Request $request){
+        try{
+            $penilaian =  $this->penilaianService->getPenilaian($request, $departementId);
+            return response()->json([
+                'data' => $penilaian,
+                'total' => count($penilaian)
+            ]);
+        }catch(\Exception $exception){
+            Log::info($exception->getMessage());
             return response()->json([
                 'message' => 'Server error.'
             ], 500);
