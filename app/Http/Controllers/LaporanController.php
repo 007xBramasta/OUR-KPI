@@ -39,6 +39,8 @@ class LaporanController extends Controller
                     }
                 }
 
+            Log::info('Fetched monthly report successfully', ['data' => $transformedData, 'total' => $approvedCount]);
+
             return response()->json([
                 'data' => $transformedData,
                 'total' => $approvedCount
