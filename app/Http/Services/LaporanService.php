@@ -53,6 +53,7 @@ class LaporanService
             $klausuls = Klausul::all();
             return [
                 'laporan_id' => $report->laporan_id,
+                'user' => $report->user->email,
                 'klausuls' => $klausuls->map(function ($klausul) {
                     // map string of klausul name
                     return $klausul->name;
