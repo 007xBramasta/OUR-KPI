@@ -2,15 +2,15 @@
 
 namespace App\Http\Services;
 
+use App\Models\Klausul;
 use App\Models\Laporan;
 use App\Models\KlausulItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\PenilaianResource;
-use App\Models\Klausul;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\LaporanResource;
+use Illuminate\Database\Eloquent\Collection;
 
 class LaporanService
 {
@@ -75,7 +75,7 @@ class LaporanService
                         if ($item->parent_id != null) { // Jika klausul item adalah child, maka tidak perlu ditampilkan
                             return; // Skip item
                         }
-                        $data = new PenilaianResource($penilaian);
+                        $data = new LaporanResource($penilaian);
                         return $data;
                     })->filter()->values();
                 })->filter()->values()
