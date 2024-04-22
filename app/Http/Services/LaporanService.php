@@ -19,37 +19,27 @@ class LaporanService
         $user = Auth::user();
 
         try {
-            // $cacheKey = $this->generateCacheKey($user->id, $month);
-
-            // if (Cache::has($cacheKey)) {
-            //     Log::info('Returning data from cache');
-            //     $transformedData = Cache::get($cacheKey);
-            // }
-
             $laporanQuery = Laporan::query()
                 ->where('departements_id', $departementId)
                 ->whereMonth('created_at', $month);
 
             if ($user->role === 'karyawan') {
+                Log::info('User role is karyawan, filtering by user id', ['userId' => $user->id]);
                 $laporanQuery->where('user_id', $user->id);
-            } // Jika role user adalah karyawan, maka hanya menampilkan laporan yang dibuat oleh user tersebut
+            }
 
-            // Tambahkan logging sebelum mengembalikan hasil
             Log::info('Monthly report query executed', ['query' => $laporanQuery->toSql(), 'bindings' => $laporanQuery->getBindings()]);
 
-            $transformedData = $this->transformData($laporanQuery->get());
+            $laporans = $laporanQuery->get();
+            Log::info('Fetched monthly report successfully', ['total' => $laporans->count()]);
 
-            // if (!Cache::has($cacheKey)) {
-            //     Cache::put($cacheKey, [
-            //         'data' => $transformedData,
-            //         'total' => $transformedData->count()
-            //     ], now()->addHour());
-            //     Log::info('Caching laporan data');
-            // }
+            $transformedData = $this->transformData($laporans);
+
+            Log::info('Transformed report data', ['data' => $transformedData]);
 
             return $transformedData;
         } catch (\Exception $e) {
-            Log::error('Error retrieving monthly report', ['error' => $e->getMessage()]);
+            Log::error('Error retrieving monthly report', ['error' => $e->getMessage(), 'trace' => $e->getTrace()]);
             throw $e;
         }
     }
