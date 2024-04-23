@@ -30,20 +30,35 @@ class LaporanController extends Controller
             $transformedData = $this->reportService->getMonthlyReport($departementId, $month);
 
             $approvedCount = 0;
-            foreach ($transformedData as $laporan)
+            $approvedUsers = [];
+
+            foreach ($transformedData as $laporan) {
+                $laporanDisetujui = false;
+
+                // Pengecekan Laporan yang disetujui
                 foreach ($laporan['klausulItems'] as $klausulItems) {
                     foreach ($klausulItems as $item) {
-                        if ($item['disetujui'] === 1) {
-                            $approvedCount++;
+                        if (isset($item['disetujui']) && $item['disetujui'] === 1) {
+                            $laporanDisetujui = true;
+                            break 2; // Break both loops
                         }
                     }
                 }
 
-            Log::info('Fetched monthly report successfully', ['data' => $transformedData, 'total' => $approvedCount]);
+                if ($laporanDisetujui) {
+                    $approvedCount++;
+                    // Tambahkan pengguna ke dalam array jika belum ada
+                    if (!in_array($laporan['user'], $approvedUsers)) {
+                        $approvedUsers[] = $laporan['user'];
+                    }
+                }
+            }
 
             return response()->json([
                 'data' => $transformedData,
-                'total' => $approvedCount
+                'total_laporan' => count($transformedData),
+                'user_disetujui' => $approvedUsers,
+                'total_laporan_disetujui' => $approvedCount
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch monthly report', ['error' => $e->getMessage()]);

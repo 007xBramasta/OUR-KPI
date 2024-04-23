@@ -67,6 +67,7 @@ class LaporanService
                             return; // Skip item
                         }
                         $data = new LaporanResource($penilaian);
+                        $data['user'] = $report->user->email;
                         return $data;
                     })->filter()->values();
                 })->filter()->values()
