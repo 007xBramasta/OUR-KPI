@@ -56,7 +56,7 @@ class LaporanController extends Controller
 
             return response()->json([
                 'data' => $transformedData,
-                'total_laporan' => count($transformedData),
+                'total' => count($transformedData),
                 'user_disetujui' => $approvedUsers,
                 'total_laporan_disetujui' => $approvedCount
             ]);
