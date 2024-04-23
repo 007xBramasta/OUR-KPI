@@ -42,4 +42,3 @@ Route::middleware('auth.jwt')->group(function () {
 });
 Route::get('/departements', [DepartementController::class, 'get_departement']);
 Route::get('klausul', [PenilaianController::class, 'klausul']);
-Route::get('/departements', [DepartementController::class, 'get_departement']);
