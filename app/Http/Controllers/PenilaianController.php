@@ -23,7 +23,7 @@ class PenilaianController extends Controller
             $penilaianData = $this->penilaianService->getPenilaian($request);
 
             return response()->json([
-                'message' => 'Data penilaian berhasil diperoleh.',
+                'message' => $penilaianData->isEmpty() ? 'Data penilaian kosong.':'Data penilaian berhasil diperoleh.',
                 'data' => $penilaianData,
                 'total' => count($penilaianData)
             ]);
