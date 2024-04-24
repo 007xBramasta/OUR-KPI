@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\PenilaianService;
+use App\Models\Laporan;
 use App\Models\Penilaian;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -117,11 +118,11 @@ class PenilaianController extends Controller
         }
     }
 
-    public function update_setuju(string $penilaianId, Request $request)
+    public function update_setuju(string $laporanId, Request $request)
     {
         try {
             // dapatkan data penilaian
-            $penilaian = Penilaian::where('id', '=', $penilaianId)->first();
+            $laporan = Laporan::where('laporan_id', '=', $laporanId)->first();
 
             $rules = [
                 'setuju' => 'required|boolean'
@@ -137,12 +138,12 @@ class PenilaianController extends Controller
 
             // ubah nilai rekomendasi dari penilaian terkait dengan nilai rekomendasi dari request
             if ($validator->passes()) {
-                $penilaian->disetujui = $request->setuju;
-                $penilaian->save();
+                $laporan->setuju = $request->setuju;
+                $laporan->save();
 
                 return response()->json([
                     'message' => 'Penilaian telah disetujui.',
-                    'data' => $penilaian
+                    'data' => $laporan
                 ]);
             }
         } catch (\Exception $exception) {

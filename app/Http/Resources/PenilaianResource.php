@@ -20,7 +20,6 @@ class PenilaianResource extends JsonResource
             'target' => $this->target,
             'aktual' => $this->aktual,
             'keterangan' => $this->keterangan,
-            'disetujui' => $this->disetujui,
             'rekomendasi' => $this->when($request->user()->role === 'admin' || $request->path() === 'api/rekomendasi' , $this->rekomendasi) 
         ];
     }

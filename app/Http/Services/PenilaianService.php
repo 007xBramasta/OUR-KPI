@@ -21,10 +21,15 @@ class PenilaianService
             $months = $request->input('months', [Carbon::now()->format('m')]);
             $laporanQuery = Laporan::query();
 
+            //get laporan only setuju == false
+            if($request->routeIs('admin.get.penilaian') || $request->routeIs('user.get.penilaian')){
+                $laporanQuery->where('setuju', '=', '0');
+            }
+
             if (auth()->user()->role !== 'admin') {
                 $laporanQuery->where('user_id', '=', auth()->user()->id);
             }
-            //ketika admin mengambil data penilaian perdepartement
+            //ketika admin mengambil data penilaian by perdepartement
             if($departementId !== null){
                 $laporanQuery->where('departements_id', '=', $departementId);
             }
@@ -47,6 +52,7 @@ class PenilaianService
             return [
                 'laporan_id' => $report->laporan_id,
                 'user' => $report->user->email,
+                'setuju' => $report->setuju,
                 'klausuls' => $klausuls->map(function ($klausul) {
                     return $klausul->name;
                 }),

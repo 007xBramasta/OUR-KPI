@@ -23,7 +23,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth.jwt')->group(function () {
     Route::get('/rekomendasi', [PenilaianController::class, 'get_rekomendasi']); 
     Route::prefix('penilaians')->group(function () {
-        Route::get('/', [PenilaianController::class, 'get_penilaian']); // Rute untuk mendapatkan data =penilaian
+        Route::get('/', [PenilaianController::class, 'get_penilaian'])->name('user.get.penilaian'); // Rute untuk mendapatkan data =penilaian
 
         Route::group(['prefix' => '{penilaianId}'], function () {
             Route::patch('/', [PenilaianController::class, 'update_penilaian']); // Rute untuk update penilaian
@@ -31,11 +31,11 @@ Route::middleware('auth.jwt')->group(function () {
             // Route for update penilaians rekomendasi, setuju 
             Route::middleware('is.admin')->group(function () {
                 Route::patch('/rekomendasi', [PenilaianController::class, 'update_rekomendasi']);
-                Route::patch('/setuju', [PenilaianController::class, 'update_setuju']);
             });
         });
-        Route::get('{departementId}', [PenilaianController::class, 'get_penilaian_by_departement'])->middleware('is.admin');
+        Route::get('{departementId}', [PenilaianController::class, 'get_penilaian_by_departement'])->middleware('is.admin')->name('admin.get.penilaian');
     });
+    Route::patch('/laporan/{laporanId}/setuju', [PenilaianController::class, 'update_setuju'])->middleware('is.admin');
     Route::get('/laporan/{departementId}', [LaporanController::class, 'showMonthlyReport']);
     // Definisikan rute lainnya yang memerlukan autentikasi di sini
 
