@@ -31,6 +31,10 @@ class PenilaianService
             }
             //ketika admin mengambil data penilaian by perdepartement
             if($departementId !== null){
+
+
+
+                
                 $laporanQuery->where('departements_id', '=', $departementId);
             }
 
