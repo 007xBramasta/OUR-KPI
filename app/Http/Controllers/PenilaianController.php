@@ -139,8 +139,7 @@ class PenilaianController extends Controller
             // ubah nilai rekomendasi dari penilaian terkait dengan nilai rekomendasi dari request
             if ($validator->passes()) {
                 $laporan->setuju = $request->setuju;
-                $laporan->save();
-
+                $laporan->penilaians()->update(['disetujui' => $request->setuju]);
                 return response()->json([
                     'message' => 'Penilaian telah disetujui.',
                     'data' => $laporan
