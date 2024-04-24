@@ -140,6 +140,7 @@ class PenilaianController extends Controller
             if ($validator->passes()) {
                 $laporan->setuju = $request->setuju;
                 $laporan->penilaians()->update(['disetujui' => $request->setuju]);
+                $laporan->save();
                 return response()->json([
                     'message' => 'Penilaian telah disetujui.',
                     'data' => $laporan
