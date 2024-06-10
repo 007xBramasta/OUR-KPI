@@ -51,30 +51,39 @@ class LaporanService
 
             // get klausuls
             $klausuls = Klausul::all();
+            $totalAktual = 0;
+            $totalKlausulItems = 64;
+
+            $klausulItems = $klausuls->map(function ($k) use ($report, &$totalAktual) {
+                // return item dari setiap klausul
+                return $k->klausul_items->map(function ($item) use ($report, &$totalAktual) {
+                    if ($item->parent_id != null) { // Jika klausul item adalah child, maka tidak perlu ditampilkan
+                        return; // Skip item
+                    }
+                    $penilaian = $item->penilaians()->where('laporan_id', '=', $report->laporan_id)->first();
+                    if ($penilaian) {
+                        $totalAktual += $penilaian->aktual; 
+                    }
+                    $data = new LaporanResource($penilaian);
+                    $data['user'] = $report->user->email;
+                    return $data;
+                })->filter()->values(); 
+            })->filter()->values();
+
+            $persentase =  ($totalAktual / $totalKlausulItems) * 100;
+
             return [
                 'laporan_id' => $report->laporan_id,
                 'user' => $report->user->email,
                 'klausuls' => $klausuls->map(function ($klausul) {
-                    // map string of klausul name
                     return $klausul->name;
                 }),
-                "klausulItems" => $klausuls->map(function ($k) use ($report) {
-                    // return item dari setiap klausul
-                    return $k->klausul_items->map(function ($item) use ($report) {
-
-                        $penilaian = $item->penilaians()->where('laporan_id', '=', $report->laporan_id)->first();
-                        if ($item->parent_id != null) { // Jika klausul item adalah child, maka tidak perlu ditampilkan
-                            return; // Skip item
-                        }
-                        $data = new LaporanResource($penilaian);
-                        $data['user'] = $report->user->email;
-                        return $data;
-                    })->filter()->values();
-                })->filter()->values()
+                'klausulItems' => $klausulItems,
+                'persentase' => "$persentase %",
             ];
         });
     }
-
+ 
 
     private function generateCacheKey($userId, $month)
     {
@@ -84,4 +93,5 @@ class LaporanService
             return $userId . '-' . 'Laporan';
         }
     }
+    
 }
