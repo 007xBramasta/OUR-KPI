@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class PenilaianService
 {
@@ -32,9 +33,6 @@ class PenilaianService
             //ketika admin mengambil data penilaian by perdepartement
             if($departementId !== null){
 
-
-
-                
                 $laporanQuery->where('departements_id', '=', $departementId);
             }
 
@@ -44,7 +42,7 @@ class PenilaianService
             $transformedData = $this->transformData($queryResult);
             return $transformedData;
         } catch (\Exception $exception) {
-            throw $exception;
+            throw $exception;   
         }
     }
 
@@ -93,6 +91,13 @@ class PenilaianService
                     $penilaian->keterangan = $request->keterangan;
                 }
             }
+
+            if ($request->hasFile('image_path')) {
+                $image = $request->file('image_path');
+                $imagePath = $image->store('penilaian_images', 'public');
+                $penilaian->image_path = $imagePath;
+            }
+
             $penilaian->save();
             Log::info('Penilaian updated successfully.');
 
