@@ -26,6 +26,12 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => "Kebijakan K3 dikomunikasikan",
                     ],
+                    [
+                        'title' => "Penetapan anggota penanganan keadaan darurat",
+                    ],
+                    [
+                        'title' => "Seritifikasi pelatihan penanganan keadaan darurat",
+                    ]
                 ],
             ],
             // Klausul 2
@@ -38,6 +44,12 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Informasi K3 dikomunikasikan'
                     ],
+                    [
+                        'title' => 'prosedur identifikasi bahaya'
+                    ],
+                    [
+                        'title' => 'Identifikasi potensi bahaya, penilaian dan pengendalian resiko'
+                    ]
                 ]
             ],
             // Klausul 3
@@ -50,6 +62,9 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Jumlah laporan perubahan'
                     ],
+                    [
+                        'title' => 'Prosedur perancangan dan modifikasi'
+                    ]
                 ]
             ],
             // Klausul 4
@@ -62,6 +77,9 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Dokumen usang segera disingkirkan atau diberi tanda khusus'
                     ],
+                    [
+                        'title' => 'Prosedur pengendalian dokumen'
+                    ]
                 ]
             ],
             // Klausul 5
@@ -74,6 +92,9 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Pemeriksaan kesesuaian barang dan jasa sesuai spesifikasi'
                     ],
+                    [
+                        'title' => 'Prosedur pengadaan barang dan jasa '
+                    ]
                 ]
             ],
             // Klausul 6
@@ -151,6 +172,9 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Pelatihan P3K'
                     ],
+                    [
+                        'title' => 'Prosedur pengendalian resiko'
+                    ]
                 ],
 
             ],
@@ -193,6 +217,9 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Program pelayanan kesehatan'
                     ],
+                    [
+                        'title' => 'Laporan pemeriksaan kesehatan tenaga kerja'
+                    ]
                 ]
             ],
             // Klausul 8
@@ -220,6 +247,12 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Tindak lanjut kecelakaan'
                     ],
+                    [
+                        'title' => 'Prosedur pelaporan bahaya'
+                    ],
+                    [
+                        'title' => 'Prosedur kecelakaan kerja'
+                    ]
                 ]
             ],
             // Klausul 9
@@ -232,6 +265,9 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Prosedur barang yang rusak atau kadaluarsa'
                     ],
+                    [
+                        'title' => 'Prosedur pembuangan bahan'
+                    ]
                 ]
             ],
             // Klausul 10
@@ -241,6 +277,9 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Catatan K3'
                     ],
+                    [
+                        'title' => 'Prosedur pengendalian catatan K3'
+                    ]
                 ]
             ],
             // Klausul 11
@@ -265,6 +304,9 @@ class KlausulKlausulItemSeeder extends Seeder
                     [
                         'title' => 'Pelatihan K3 dilakukan oleh orang dan badan yang berkompeten'
                     ],
+                    [
+                        'title' => 'Pelatihan lisensi dan kualifikasi tenaga kerja khusus'
+                    ]
                 ]
             ],
         ];
