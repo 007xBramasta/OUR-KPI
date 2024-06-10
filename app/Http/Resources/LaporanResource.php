@@ -21,7 +21,8 @@ class LaporanResource extends JsonResource
             'aktual' => $this->aktual,
             'keterangan' => $this->keterangan,
             'disetujui' => $this->disetujui,
-            'rekomendasi' => $this->when($request->user()->role === 'admin' || $request->path() === 'api/rekomendasi', $this->rekomendasi)
+            'rekomendasi' => $this->when($request->user()->role === 'admin' || $request->path() === 'api/rekomendasi', $this->rekomendasi), 
+            'image_path' => $this->image_path ? url('storage/' . $this->image_path) : null 
         ];
     }
 
