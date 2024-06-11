@@ -23,7 +23,7 @@ class PenilaianController extends Controller
             $penilaianData = $this->penilaianService->getPenilaian($request);
 
             return response()->json([
-                'message' => $penilaianData->isEmpty() ? 'Data penilaian kosong.':'Data penilaian berhasil diperoleh.',
+                'message' => $penilaianData->isEmpty() ? 'Data penilaian kosong.' : 'Data penilaian berhasil diperoleh.',
                 'data' => $penilaianData,
                 'total' => count($penilaianData)
             ]);
@@ -35,14 +35,15 @@ class PenilaianController extends Controller
         }
     }
 
-    public function get_penilaian_by_departement($departementId, Request $request){
-        try{
+    public function get_penilaian_by_departement($departementId, Request $request)
+    {
+        try {
             $penilaian =  $this->penilaianService->getPenilaian($request, $departementId);
             return response()->json([
                 'data' => $penilaian,
                 'total' => count($penilaian)
             ]);
-        }catch(\Exception $exception){
+        } catch (\Exception $exception) {
             Log::info($exception->getMessage());
             return response()->json([
                 'message' => 'Server error.'
@@ -152,5 +153,21 @@ class PenilaianController extends Controller
                 'message' => 'Server error'
             ], 500);
         }
+    }
+
+    public function monthlyStatus()
+    {
+        $user = auth()->user();
+        $year = date('Y');
+        $laporans = Laporan::query()->select(['filled', 'created_at'])
+            ->where('user_id', $user->id)
+            ->whereYear('created_at', $year)->get();
+        $data = $laporans->map(function ($item) {
+            return [
+                'month' => $item->created_at->isoFormat('MMMM'),
+                'filled' => $item->filled
+            ];
+        })->toArray();
+        return response()->json($data);
     }
 }

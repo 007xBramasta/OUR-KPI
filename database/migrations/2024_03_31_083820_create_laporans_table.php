@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('laporan_id')->primary();
             $table->foreignUuid('user_id')->references('id')->on('user');
             $table->foreignUuid('departements_id')->references('departements_id')->on('departements');
+            $table->boolean('filled')->default(false);
             $table->timestamps();
         });
     }

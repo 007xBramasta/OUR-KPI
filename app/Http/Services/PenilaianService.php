@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Http\Resources\PenilaianResource;
+use App\Jobs\updateFilledStatusJob;
 use App\Models\Klausul;
 use App\Models\Laporan;
 use App\Models\Penilaian;
@@ -100,7 +101,7 @@ class PenilaianService
 
             $penilaian->save();
             Log::info('Penilaian updated successfully.');
-
+            updateFilledStatusJob::dispatch($penilaian->laporan);
             return new PenilaianResource($penilaian);
         } catch (\Exception $exception) {
             throw $exception;

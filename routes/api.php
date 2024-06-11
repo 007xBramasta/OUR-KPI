@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\PenilaianController;
+use App\Models\Penilaian;
 
 // Rute untuk autentikasi
 Route::prefix('auth')->group(function () {
@@ -23,6 +24,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth.jwt')->group(function () {
     Route::get('/rekomendasi', [PenilaianController::class, 'get_rekomendasi']); 
     Route::prefix('penilaians')->group(function () {
+        Route::get('/status-bulan', [PenilaianController::class,'monthlyStatus']);
         Route::get('/', [PenilaianController::class, 'get_penilaian'])->name('user.get.penilaian'); // Rute untuk mendapatkan data =penilaian
 
         Route::group(['prefix' => '{penilaianId}'], function () {
