@@ -165,7 +165,8 @@ class PenilaianController extends Controller
         $data = $laporans->map(function ($item) {
             return [
                 'month' => $item->created_at->isoFormat('MMMM'),
-                'filled' => $item->filled
+                'filled' => $item->filled,
+                ''
             ];
         })->toArray();
         return response()->json($data);

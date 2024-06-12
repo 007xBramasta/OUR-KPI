@@ -27,12 +27,12 @@ class PenilaianDataSeeder extends Seeder
                 $Laporan = Laporan::create([
                     'user_id' => $karyawan->id,
                     'departements_id' => $karyawan->departements_id,
-                    'created_at' => Carbon::create(2023, $i, 1, 0, 0, 1, 'Asia/Jakarta'),
-                    'updated_at' => Carbon::create(2023, $i, 1, 0, 0, 1, 'Asia/Jakarta'),
+                    'created_at' => Carbon::create(date('Y'), $i, 1, 0, 0, 1, 'Asia/Jakarta'),
+                    'updated_at' => Carbon::create(date('Y'), $i, 1, 0, 0, 1, 'Asia/Jakarta'),
                 ]);
-                
+
                 // buat penilaian untuk setiap klausul item dari laporan di atas
-                foreach($klausuls_items as $item){
+                foreach ($klausuls_items as $item) {
                     Penilaian::create([
                         'laporan_id' => $Laporan->laporan_id,
                         'klausul_item_id' => $item->id
@@ -47,7 +47,6 @@ class PenilaianDataSeeder extends Seeder
                         'klausul_id' => $klausul->id
                     ]);
                 }
-
             }
         }
     }
