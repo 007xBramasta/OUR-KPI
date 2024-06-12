@@ -166,7 +166,6 @@ class PenilaianController extends Controller
             return [
                 'month' => $item->created_at->isoFormat('MMMM'),
                 'filled' => $item->filled,
-                ''
             ];
         })->toArray();
         return response()->json($data);

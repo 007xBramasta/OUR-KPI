@@ -38,7 +38,7 @@ class updateFilledStatusJob implements ShouldQueue
             $this->laporan->update([
                 'filled' => 1
             ]);
-        } else {
+        } else if($count > 0) {
             $this->laporan->update([
                 'filled' => 0
             ]);

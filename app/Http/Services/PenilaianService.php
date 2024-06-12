@@ -24,7 +24,7 @@ class PenilaianService
             $laporanQuery = Laporan::query();
 
             //get laporan only setuju == false
-            if($request->routeIs('admin.get.penilaian') || $request->routeIs('user.get.penilaian')){
+            if ($request->routeIs('admin.get.penilaian') || $request->routeIs('user.get.penilaian')) {
                 $laporanQuery->where('setuju', '=', '0');
             }
 
@@ -32,7 +32,7 @@ class PenilaianService
                 $laporanQuery->where('user_id', '=', auth()->user()->id);
             }
             //ketika admin mengambil data penilaian by perdepartement
-            if($departementId !== null){
+            if ($departementId !== null) {
 
                 $laporanQuery->where('departements_id', '=', $departementId);
             }
@@ -43,7 +43,7 @@ class PenilaianService
             $transformedData = $this->transformData($queryResult);
             return $transformedData;
         } catch (\Exception $exception) {
-            throw $exception;   
+            throw $exception;
         }
     }
 
@@ -101,7 +101,9 @@ class PenilaianService
 
             $penilaian->save();
             Log::info('Penilaian updated successfully.');
-            updateFilledStatusJob::dispatch($penilaian->laporan);
+            updateFilledStatusJob::dispatch($penilaian->laporan)
+                ->afterCommit()
+                ->delay(now()->addSecond(30));
             return new PenilaianResource($penilaian);
         } catch (\Exception $exception) {
             throw $exception;
