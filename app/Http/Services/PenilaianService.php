@@ -101,9 +101,21 @@ class PenilaianService
 
             $penilaian->save();
             Log::info('Penilaian updated successfully.');
-            updateFilledStatusJob::dispatch($penilaian->laporan)
-                ->afterCommit()
-                ->delay(now()->addSecond(30));
+            // updateFilledStatusJob::dispatch($penilaian->laporan)
+            //     ->afterCommit()
+            //     ->delay(now()->addSecond(30));
+            $allUpdated = Penilaian::where('laporan_id', $penilaian->laporan_id)
+                ->where('aktual', 0)
+                ->count() == 0;
+
+            if ($allUpdated) {
+                // Update Laporan
+                $laporan = Laporan::findOrFail($penilaian->laporan_id);
+                $laporan->filled = true;
+                $laporan->save();
+            }
+
+
             return new PenilaianResource($penilaian);
         } catch (\Exception $exception) {
             throw $exception;
