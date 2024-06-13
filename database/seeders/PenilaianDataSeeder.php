@@ -30,6 +30,9 @@ class PenilaianDataSeeder extends Seeder
 
                 // buat penilaian untuk setiap klausul item dari laporan di atas
                 foreach ($klausuls_items as $item) {
+                    if($item->parent_id != null){
+                        continue;
+                    }
                     Penilaian::create([
                         'laporan_id' => $Laporan->laporan_id,
                         'klausul_item_id' => $item->id

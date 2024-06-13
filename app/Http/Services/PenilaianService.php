@@ -62,8 +62,11 @@ class PenilaianService
                 "klausulItems" => $klausuls->map(function ($k) use ($report) {
                     // return item dari setiap klausul
                     return $k->klausul_items->map(function ($item) use ($report) {
-
-                        $penilaian = $item->penilaians()->where('laporan_id', '=', $report->laporan_id)->first();
+                        $penilaian =  $item->penilaians()->where('laporan_id', '=', $report->laporan_id)->first();
+                        
+                        if($penilaian === null){
+                            return;
+                        }
                         if ($item->parent_id != null) { // Jika klausul item adalah child, maka tidak perlu ditampilkan
                             return; // Skip item
                         }
@@ -82,9 +85,7 @@ class PenilaianService
                 ->firstOrFail();
 
             if ($request->has('aktual')) {
-                if ($request->aktual != $penilaian->aktual) {
                     $penilaian->aktual = $request->aktual;
-                }
             }
 
             if ($request->has('keterangan')) {
@@ -101,26 +102,24 @@ class PenilaianService
 
             $penilaian->save();
             Log::info('Penilaian updated successfully.');
+            Log::info(json_encode($penilaian,JSON_PRETTY_PRINT));
             // updateFilledStatusJob::dispatch($penilaian->laporan)
             //     ->afterCommit()
             //     ->delay(now()->addSecond(30));
-            $allUpdated = Penilaian::where('laporan_id', $penilaian->laporan_id)
-                ->where('aktual', 0)
-                ->count() == 0;
+            $count = Penilaian::where('laporan_id', $penilaian->laporan_id)
+                ->where('aktual', '=', 0)
+                ->count();
 
 
-            if ($allUpdated) {
+            $laporan = Laporan::findOrFail($penilaian->laporan_id);
+            if ($count == 0) {
                 // Update Laporan
-                $laporan = Laporan::findOrFail($penilaian->laporan_id);
                 $laporan->filled = true;
                 $laporan->save();
             } else {
-                $laporan = Laporan::findOrFail($penilaian->laporan_id);
                 $laporan->filled = false;
                 $laporan->save();
             }
-
-
             return new PenilaianResource($penilaian);
         } catch (\Exception $exception) {
             throw $exception;

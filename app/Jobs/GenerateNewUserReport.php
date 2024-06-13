@@ -49,14 +49,17 @@ class GenerateNewUserReport implements ShouldQueue // di panggil saat user regis
             }
 
             $userLaporans = Laporan::where('user_id', "=", $this->user->id)->get();
-            $klausul_items = KlausulItem::all();
+            $klausul_items = $this->user->departement->klausul_items; //get klausul_items from user departement
             foreach ($userLaporans as $laporan) {
                 // buat penilaian untuk setiap klausul item dari laporan di atas
                 foreach ($klausul_items as $item) {
-                    Penilaian::create([
-                        'laporan_id' => $laporan->laporan_id,
-                        'klausul_item_id' => $item->id
-                    ]);
+                    // create penilaian to item
+                    if ($item->parent_id == null) {
+                        Penilaian::create([
+                            'laporan_id' => $laporan->laporan_id,
+                            'klausul_item_id' => $item->id
+                        ]);
+                    }
                 }
             }
         } catch (\Throwable $th) {
