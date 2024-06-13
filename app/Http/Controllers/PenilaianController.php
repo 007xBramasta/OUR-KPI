@@ -162,10 +162,11 @@ class PenilaianController extends Controller
         $laporans = Laporan::query()->select(['filled', 'created_at'])
             ->where('user_id', $user->id)
             ->whereYear('created_at', $year)->get();
+            // dd($laporans->toArray());
         $data = $laporans->map(function ($item) {
             return [
                 'month' => $item->created_at->isoFormat('MMMM'),
-                'filled' => $item->filled,
+                'filled' => (bool) $item->filled,
             ];
         })->toArray();
         return response()->json($data);

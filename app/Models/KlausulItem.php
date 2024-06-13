@@ -35,4 +35,9 @@ class KlausulItem extends Model
     {
         return $this->hasMany(Penilaian::class, 'klausul_item_id', 'id');
     }
+
+    public function departements()
+    {
+        return $this->belongsToMany(Departement::class, 'departement_klausul_item',  'klausul_item_id', 'departement_id');
+    }
 }

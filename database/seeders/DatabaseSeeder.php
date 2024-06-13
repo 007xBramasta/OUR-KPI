@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             KlausulKlausulItemSeeder::class,
             PenilaianDataSeeder::class,
+            DepartementKlausulSeeder::class
         ]);
     }
 }

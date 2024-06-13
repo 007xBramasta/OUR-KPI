@@ -37,4 +37,9 @@ class Departement extends Model
             'id'
         );
     }
+
+    public function klausul_items()
+    {
+        return $this->belongsToMany(KlausulItem::class, 'departement_klausul_item', 'departement_id',  'klausul_item_id', 'departement_id','id');
+    }
 }

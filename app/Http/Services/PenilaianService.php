@@ -108,10 +108,15 @@ class PenilaianService
                 ->where('aktual', 0)
                 ->count() == 0;
 
+
             if ($allUpdated) {
                 // Update Laporan
                 $laporan = Laporan::findOrFail($penilaian->laporan_id);
                 $laporan->filled = true;
+                $laporan->save();
+            } else {
+                $laporan = Laporan::findOrFail($penilaian->laporan_id);
+                $laporan->filled = false;
                 $laporan->save();
             }
 
