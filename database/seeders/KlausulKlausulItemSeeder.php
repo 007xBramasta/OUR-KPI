@@ -170,9 +170,6 @@ class KlausulKlausulItemSeeder extends Seeder
                         'title' => 'Inspeksi Peralatan P3K'
                     ],
                     [
-                        'title' => 'Pelatihan P3K'
-                    ],
-                    [
                         'title' => 'Prosedur pengendalian resiko'
                     ]
                 ],
