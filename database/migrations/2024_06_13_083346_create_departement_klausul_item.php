@@ -24,7 +24,9 @@ return new class extends Migration
                 ->references('id')
                 ->on('klausul_items')
                 ->cascadeOnDelete(); 
+            $table->unique(['departement_id', 'klausul_item_id']);
         });
+
     }
 
     /**

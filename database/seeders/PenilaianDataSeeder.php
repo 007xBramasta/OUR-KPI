@@ -20,10 +20,10 @@ class PenilaianDataSeeder extends Seeder
     {
         $karyawans = User::where('role', '=', 'karyawan')->get();
         $klausuls = Klausul::all();
-        $klausuls_items = KlausulItem::all();
-
         foreach ($karyawans as $karyawan) {
             for ($i = 1; $i <= 12; $i++) {
+                $departement =  $karyawan->departement;
+                $klausuls_items =  $departement->klausul_items;
                 $Laporan = Laporan::create([
                     'user_id' => $karyawan->id,
                     'departements_id' => $karyawan->departements_id,

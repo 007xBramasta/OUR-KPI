@@ -20,7 +20,7 @@ class Departement extends Model
     {
         return $this->hasMany(User::class, 'departements_id', 'id');
     }
-    
+
     public function rekomendasi(): HasManyThrough
     {
         return $this->hasManyThrough(Rekomendasi::class, Laporan::class, 'departements_id', 'laporan_id', 'rekomendasi_id');
@@ -29,7 +29,7 @@ class Departement extends Model
     public function laporans(): HasManyThrough
     {
         return $this->hasManyThrough(
-            Laporan::class, 
+            Laporan::class,
             User::class,
             'departements_id',
             'user_id',
@@ -40,6 +40,13 @@ class Departement extends Model
 
     public function klausul_items()
     {
-        return $this->belongsToMany(KlausulItem::class, 'departement_klausul_item', 'departement_id',  'klausul_item_id', 'departement_id','id');
+        return $this->belongsToMany(
+            KlausulItem::class,
+            'departement_klausul_item',
+            'departement_id',
+            'klausul_item_id',
+            'departements_id',
+            'id'
+        );
     }
 }

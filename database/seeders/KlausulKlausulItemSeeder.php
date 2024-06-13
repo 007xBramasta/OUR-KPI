@@ -236,9 +236,6 @@ class KlausulKlausulItemSeeder extends Seeder
                         'title' => 'Laporan kecelakaan kerja'
                     ],
                     [
-                        'title' => 'Laporan kecelakaan kerja'
-                    ],
-                    [
                         'title' => 'Tim investigasi terlatih dan berkompeten'
                     ],
                     [
