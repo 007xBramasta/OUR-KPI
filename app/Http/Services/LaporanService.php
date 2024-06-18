@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\LaporanResource;
+use App\Models\Departement;
 use Illuminate\Database\Eloquent\Collection;
 
 class LaporanService
@@ -17,6 +18,7 @@ class LaporanService
     public function getMonthlyReport($departementId, $month)
     {
         $user = Auth::user();
+        $totalKlausulItems =  Departement::find($departementId)->klausul_items->count();
 
         try {
             $laporanQuery = Laporan::query()
@@ -33,8 +35,7 @@ class LaporanService
             $laporans = $laporanQuery->get();
             Log::info('Fetched monthly report successfully', ['total' => $laporans->count()]);
 
-            $transformedData = $this->transformData($laporans);
-
+            $transformedData = $this->transformData($laporans, $totalKlausulItems);
             Log::info('Transformed report data', ['data' => $transformedData]);
 
             return $transformedData;
@@ -44,15 +45,14 @@ class LaporanService
         }
     }
 
-    protected function transformData(Collection $reports)
+    protected function transformData(Collection $reports, $totalKlausulItems)
     {
-        return $reports->map(function ($report) {
+        return $reports->map(function ($report) use ($totalKlausulItems) {
             // Transform data laporan ke dalam bentuk yang diinginkan    
 
             // get klausuls
             $klausuls = Klausul::all();
             $totalAktual = 0;
-            $totalKlausulItems = 64;
 
             $klausulItems = $klausuls->map(function ($k) use ($report, &$totalAktual) {
                 // return item dari setiap klausul
@@ -61,9 +61,13 @@ class LaporanService
                         return; // Skip item
                     }
                     $penilaian = $item->penilaians()->where('laporan_id', '=', $report->laporan_id)->first();
+                    if($penilaian === null){
+                        return;
+                    }
                     if ($penilaian) {
                         $totalAktual += $penilaian->aktual; 
                     }
+
                     $data = new LaporanResource($penilaian);
                     $data['user'] = $report->user->email;
                     return $data;
@@ -79,7 +83,7 @@ class LaporanService
                     return $klausul->name;
                 }),
                 'klausulItems' => $klausulItems,
-                'persentase' => "$persentase %",
+                'total' => "$persentase %",
             ];
         });
     }
