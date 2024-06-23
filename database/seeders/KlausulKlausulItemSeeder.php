@@ -45,7 +45,7 @@ class KlausulKlausulItemSeeder extends Seeder
                         'title' => 'Informasi K3 dikomunikasikan'
                     ],
                     [
-                        'title' => 'prosedur identifikasi bahaya'
+                        'title' => 'Prosedur identifikasi bahaya'
                     ],
                     [
                         'title' => 'Identifikasi potensi bahaya, penilaian dan pengendalian resiko'
@@ -168,6 +168,9 @@ class KlausulKlausulItemSeeder extends Seeder
                     ],
                     [
                         'title' => 'Inspeksi Peralatan P3K'
+                    ],
+                    [
+                        'title' => 'Pelatihan P3K'
                     ],
                     [
                         'title' => 'Prosedur pengendalian resiko'

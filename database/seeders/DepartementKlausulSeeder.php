@@ -16,22 +16,15 @@ class DepartementKlausulSeeder extends Seeder
     public function run()
     {
         $titles = [
-            'Rencana kerja dan rencana khusus',
-            'Informasi K3 dikomunikasikan',
-            'Penetapan anggota penanganan keadaan darurat',
-            'Seritifikasi pelatihan penanganan keadaan darurat',
-            'Rencana kerja dan rencana khusus',
-            'Informasi K3 dikomunikasikan',
-            'Laporan Inspeksi K3',
-            'Laporan unsafe condition',
-            'Laporan nearmiss',
-            'Laporan kecelakaan kerja',
-            'Tim investigasi terlatih dan berkompeten',
-            'Prosedur perancangan dan modifikasi'
+            'Bill of quantity (Planning, RAB, evaluasi)',
+            'Jumlah laporan perubahan',
+            'Prosedur perancangan dan modifikasi',
+            'Pelatihan K3',
+            'Pelatihan K3 dilakukan oleh orang dan badan yang berkompeten',
         ];
 
         // Menghubungkan klausul yang pasti ada di semua departement
-        $departements = Departement::all();
+        $departements = Departement::whereNotIn('departements_name', ['Maintenance', 'Office'])->get();
         $klausuls = KlausulItem::whereNotIn('title', $titles)->get();
 
         $departements->each(function ($departement) use ($klausuls) {
@@ -40,26 +33,23 @@ class DepartementKlausulSeeder extends Seeder
             $departement->klausul_items()->attach($newKlausuls);
         });
 
-        // Menghubungkan klausul yang pasti ada di semua departement namun tidak ada di departement Maintenance
-        $departementWithoutMaintenance = Departement::whereNotIn('departements_name', ['Maintenance'])->get();
-        $departementWithoutMaintenance->each(function ($departement) use ($klausuls) {
-            $existingKlausuls = $departement->klausul_items->pluck('id')->toArray();
-            $newKlausuls = $klausuls->whereNotIn('id', $existingKlausuls);
-            $departement->klausul_items()->attach($newKlausuls);
-        });
+        // KlausulItem Office
+        $departementOffice = Departement::where('departements_name', 'Office')->first();
+        $klausulItems = KlausulItem::all();
+        $departementOffice->klausul_items()->attach($klausulItems);
 
         // Menghubungkan klausul yang hanya  ada di departement Office
-        $departementOffice = Departement::where('departements_name', 'Office')->first();
-        $klausulsOnlyOffice = KlausulItem::whereIn('title', [
-            'Laporan kecelakaan kerja',
-            'Tim investigasi terlatih dan berkompeten',
+        $departementMaintenance = Departement::where('departements_name', 'Maintenance')->first();
+        $klausulItems = KlausulItem::whereNotIn('title', [
             'Rencana kerja dan rencana khusus',
             'Informasi K3 dikomunikasikan',
-            'Prosedur perancangan dan modifikasi'
+            'Bill of quantity (Planning, RAB, evaluasi)',
+            'Jumlah laporan perubahan',
+            'Prosedur perancangan dan modifikasi',
+            'Melakukan audit internal',
+            'Laporan audit internal',
+            'Pelatihan K3'
         ])->get();
-
-        $existingKlausulsOffice = $departementOffice->klausul_items->pluck('id')->toArray();
-        $newKlausulsOffice = $klausulsOnlyOffice->whereNotIn('id', $existingKlausulsOffice);
-        $departementOffice->klausul_items()->attach($newKlausulsOffice);
+        $departementMaintenance->klausul_items()->attach($klausulItems);
     }
 }
