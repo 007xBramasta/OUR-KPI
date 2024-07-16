@@ -104,21 +104,7 @@ class PenilaianService
             Log::info(json_encode($penilaian,JSON_PRETTY_PRINT));
             // updateFilledStatusJob::dispatch($penilaian->laporan)
             //     ->afterCommit()
-            //     ->delay(now()->addSecond(30));
-            $count = Penilaian::where('laporan_id', $penilaian->laporan_id)
-                ->where('aktual', '=', 0)
-                ->count();
-
-
-            $laporan = Laporan::findOrFail($penilaian->laporan_id);
-            if ($count == 0) {
-                // Update Laporan
-                $laporan->filled = true;
-                $laporan->save();
-            } else {
-                $laporan->filled = false;
-                $laporan->save();
-            }
+            //     ->delay(now()->addSecond(30));            
             return new PenilaianResource($penilaian);
         } catch (\Exception $exception) {
             throw $exception;
